@@ -29,8 +29,8 @@ return new class extends Migration
             $table->date('date_start');
             $table->date('date_end');
 
-            $table->unsignedBigInteger('cores_id');
-            $table->foreign('cores_id')->references('id')->on('cores')->onDelete('cascade');
+            $table->unsignedBigInteger('profile_id');
+            $table->foreign('profile_id')->references('id')->on('profile')->onDelete('cascade');
 
             $table->rememberToken();
             $table->timestamps();

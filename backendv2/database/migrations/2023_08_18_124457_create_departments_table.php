@@ -18,6 +18,16 @@ return new class extends Migration
             $table->string('name');
             $table->timestamps();
         });
+
+        Schema::create('profiles', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+
+            $table->unsignedBigInteger('cores_id');
+            $table->foreign('cores_id')->references('id')->on('cores')->onDelete('cascade');
+
+            $table->timestamps();
+        });
     }
 
     /**

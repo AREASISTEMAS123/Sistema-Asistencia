@@ -5,21 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Core extends Model
+class Profile extends Model
 {
     use HasFactory;
     protected $fillable = [
         'name',
-        'department_id',
+        'cores_id',
     ];
 
     public function department()
     {
-        return $this->belongsTo(Department::class, 'department_id', 'id');
-    }
-
-    public function profile()
-    {
-        return $this->hasMany(Profile::class, 'cores_id', 'id');
+        return $this->belongsTo(Core::class, 'cores_id', 'id');
     }
 }

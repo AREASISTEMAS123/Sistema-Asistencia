@@ -20,3 +20,9 @@ Route::post('cores/create', [App\Http\Controllers\CoresController::class, 'creat
 Route::post('cores/update/{id}', [App\Http\Controllers\CoresController::class, 'updateCore']);
 Route::delete('cores/delete/{id}', [App\Http\Controllers\CoresController::class, 'deleteCore']);
 
+// ---------------- PROFILES URL's ---------------- //
+Route::get('profile/list', [App\Http\Controllers\ProfileController::class, 'getProfiles']);
+Route::post('profile/create', [App\Http\Controllers\ProfileController::class, 'createProfile']);
+Route::post('profile/update/{id}', [App\Http\Controllers\ProfileController::class, 'updateProfile']);
+Route::delete('profile/delete/{id}', [App\Http\Controllers\ProfileController::class, 'deleteProfile']);
+

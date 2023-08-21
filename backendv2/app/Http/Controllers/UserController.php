@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\RegisterRequest;
 use Illuminate\Http\Request;
 use App\Repositories\UserRepositories\UserRepositoryInterface;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -58,5 +59,10 @@ class UserController extends Controller
         }
 
         return response()->json(['message' => 'User deleted successfully']);
+    }
+
+    public function getData(){
+        $users = User::with('position')->get();
+        return response()->json($users);
     }
 }

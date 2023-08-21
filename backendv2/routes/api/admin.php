@@ -19,11 +19,12 @@ Route::post('cores/update/{id}', [App\Http\Controllers\CoresController::class, '
 Route::delete('cores/delete/{id}', [App\Http\Controllers\CoresController::class, 'deleteCore']);
 
 // ---------------- PROFILES URL's ---------------- //
-Route::get('profile/list', [App\Http\Controllers\ProfileController::class, 'getProfiles']);
-Route::post('profile/create', [App\Http\Controllers\ProfileController::class, 'createProfile']);
-Route::post('profile/update/{id}', [App\Http\Controllers\ProfileController::class, 'updateProfile']);
-Route::delete('profile/delete/{id}', [App\Http\Controllers\ProfileController::class, 'deleteProfile']);
+Route::get('position/list', [App\Http\Controllers\PositionController::class, 'getProfiles']);
+Route::post('position/create', [App\Http\Controllers\PositionController::class, 'createProfile']);
+Route::post('position/update/{id}', [App\Http\Controllers\PositionController::class, 'updateProfile']);
+Route::delete('position/delete/{id}', [App\Http\Controllers\PositionController::class, 'deleteProfile']);
 
+Route::get('users/list', [App\Http\Controllers\UserController::class, 'getData']);
 
 });
 

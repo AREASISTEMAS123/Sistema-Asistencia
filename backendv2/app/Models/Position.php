@@ -10,11 +10,11 @@ class Position extends Model
     use HasFactory;
     protected $fillable = [
         'name',
-        'cores_id',
+        'core_id',
     ];
 
     public function department()
     {
-        return $this->belongsTo(Core::class, 'cores_id', 'id');
+        return $this->belongsTo(Core::class, 'core_id', 'id');
     }
 }

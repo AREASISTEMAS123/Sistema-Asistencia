@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Repositories\ProfileRepositories\EloquentPositionRepository;
 use App\Repositories\ProfileRepositories\EloquentProfileRepository;
+use App\Repositories\ProfileRepositories\PositionRepositoryInterface;
 use App\Repositories\ProfileRepositories\ProfileRepositoryInterface;
 use App\Repositories\UserRepositories\EloquentUserRepository;
 use App\Repositories\UserRepositories\UserRepositoryInterface;
@@ -18,7 +20,7 @@ class RepositoryServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(UserRepositoryInterface::class, EloquentUserRepository::class);
-        $this->app->bind(ProfileRepositoryInterface::class, EloquentProfileRepository::class);
+        $this->app->bind(PositionRepositoryInterface::class, EloquentPositionRepository::class);
     }
 
     /**

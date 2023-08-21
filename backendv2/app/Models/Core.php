@@ -20,6 +20,6 @@ class Core extends Model
 
     public function profile()
     {
-        return $this->hasMany(Profile::class, 'cores_id', 'id');
+        return $this->hasMany(Profile::class, 'core_id', 'id');
     }
 }

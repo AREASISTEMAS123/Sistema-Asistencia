@@ -19,15 +19,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('profiles', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-
-            $table->unsignedBigInteger('cores_id');
-            $table->foreign('cores_id')->references('id')->on('cores')->onDelete('cascade');
-
-            $table->timestamps();
-        });
     }
 
     /**
@@ -38,5 +29,6 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('departments');
+
     }
 };

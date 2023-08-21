@@ -24,7 +24,7 @@ Route::post('position/create', [App\Http\Controllers\PositionController::class, 
 Route::post('position/update/{id}', [App\Http\Controllers\PositionController::class, 'updateProfile']);
 Route::delete('position/delete/{id}', [App\Http\Controllers\PositionController::class, 'deleteProfile']);
 
-Route::get('users/list', [App\Http\Controllers\UserController::class, 'getData']);
+Route::get('users/list', [App\Http\Controllers\UserController::class, 'showProfileData']);
 
 });
 

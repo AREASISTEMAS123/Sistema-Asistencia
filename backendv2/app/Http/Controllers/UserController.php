@@ -35,6 +35,11 @@ class UserController extends Controller
         return response()->json($user);
     }
 
+    public function showProfileData(){
+        $users = User::with('position.department.department')->get();
+        return response()->json($users);
+    }
+
     public function store(RegisterRequest $request)
     {
         // Implement validation here (similar to what we discussed before)
@@ -59,10 +64,5 @@ class UserController extends Controller
         }
 
         return response()->json(['message' => 'User deleted successfully']);
-    }
-
-    public function getData(){
-        $users = User::with('position')->get();
-        return response()->json($users);
     }
 }

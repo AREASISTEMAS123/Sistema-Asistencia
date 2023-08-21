@@ -13,6 +13,11 @@ class Position extends Model
         'core_id',
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
     public function department()
     {
         return $this->belongsTo(Core::class, 'core_id', 'id');

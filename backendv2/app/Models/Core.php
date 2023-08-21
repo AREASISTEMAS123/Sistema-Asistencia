@@ -13,6 +13,11 @@ class Core extends Model
         'department_id',
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
     public function department()
     {
         return $this->belongsTo(Department::class, 'department_id', 'id');

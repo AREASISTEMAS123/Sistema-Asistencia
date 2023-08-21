@@ -24,6 +24,13 @@ Route::post('position/create', [App\Http\Controllers\PositionController::class, 
 Route::post('position/update/{id}', [App\Http\Controllers\PositionController::class, 'updateProfile']);
 Route::delete('position/delete/{id}', [App\Http\Controllers\PositionController::class, 'deleteProfile']);
 
+// ---------------- JUSTIFICATIONS URL's ---------------- //
+
+Route::get('justification/list', [App\Http\Controllers\JustificationController::class, 'getJustifications']);
+Route::post('justification/create', [App\Http\Controllers\JustificationController::class, 'createJustifications']);
+Route::post('justification/update/{id}', [App\Http\Controllers\JustificationController::class, '']);
+Route::delete('justification/delete/{id}', [App\Http\Controllers\JustificationController::class, '']);
+
 Route::get('users/list', [App\Http\Controllers\UserController::class, 'showProfileData']);
 
 });

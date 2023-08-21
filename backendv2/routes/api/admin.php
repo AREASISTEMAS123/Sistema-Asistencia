@@ -25,9 +25,9 @@ Route::post('profile/update/{id}', [App\Http\Controllers\ProfileController::clas
 Route::delete('profile/delete/{id}', [App\Http\Controllers\ProfileController::class, 'deleteProfile']);
 
 // ---------------- BIRTHDAYS URL's ---------------- //
-Route::get('/birthday', [\App\Http\Controllers\BirthdayController::class, 'getbirthday']);
-Route::get('/birthday/nextBirthday', [\App\Http\Controllers\BirthdayController::class, 'getUpcomingBirthdaysWithUsers']);
 Route::get('/birthday/details', [\App\Http\Controllers\BirthdayController::class, 'detailsbirthdayMonth']);
+Route::get('/birthday/nextBirthday', [\App\Http\Controllers\BirthdayController::class, 'getUpcomingBirthdaysWithUsers']);
+
 
 });
 

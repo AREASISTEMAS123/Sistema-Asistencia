@@ -2,23 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\PositionService;
 use Illuminate\Http\Request;
-use App\Services\ProfileService;
 
 class ProfileController extends Controller {
-    protected $profileService;
+    protected $positionService;
 
-    public function __construct(ProfileService $profileService) {
-        $this->profileService = $profileService;
+    public function __construct(PositionService $positionService) {
+        $this->positionService = $positionService;
     }
 
     public function getProfiles() {
-        $profiles = $this->profileService->getAllProfiles();
+        $profiles = $this->positionService->getAllPositions();
         return response()->json($profiles);
     }
 
     public function createProfile(Request $request) {
-        $profile = $this->profileService->createProfile($request->all());
+        $profile = $this->positionService->createPosition($request->all());
         if (!$profile) {
             return response()->json(['message' => 'Nucleo no encontrado.'], 404);
         }
@@ -26,7 +26,7 @@ class ProfileController extends Controller {
     }
 
     public function updateProfile(Request $request, $id) {
-        $updated = $this->profileService->updateProfile($id, $request->all());
+        $updated = $this->positionService->updatePosition($id, $request->all());
         if (!$updated) {
             return response()->json(['message' => 'Nucleo no encontrado o perfil no encontrado.'], 404);
         }
@@ -34,7 +34,7 @@ class ProfileController extends Controller {
     }
 
     public function deleteProfile($id) {
-        $deleted = $this->profileService->deleteProfile($id);
+        $deleted = $this->positionService->deletePosition($id);
         if (!$deleted) {
             return response()->json(['message' => 'Perfil no encontrado.'], 404);
         }

@@ -37,7 +37,6 @@ class UserController extends Controller
     public function store(RegisterRequest $request)
     {
         // Implement validation here (similar to what we discussed before)
-
         $user = $this->userRepository->create($request->all());
         return response()->json(['message' => 'User created successfully', 'data' => $user], 201);
     }
@@ -45,7 +44,6 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         // Implement validation here
-
         if (!$this->userRepository->update($id, $request->all())) {
             return response()->json(['message' => 'User update failed'], 400);
         }

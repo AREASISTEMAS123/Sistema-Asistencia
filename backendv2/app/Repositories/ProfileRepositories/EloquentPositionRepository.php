@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace App\Repositories\ProfileRepositories;
 
-use App\Models\Profile;
-use App\Repositories\ProfileRepositories\ProfileRepositoryInterface;
+use App\Models\Position;
+use App\Repositories\ProfileRepositories\PositionRepositoryInterface;
 
-class EloquentProfileRepository implements ProfileRepositoryInterface {
+class EloquentPositionRepository implements PositionRepositoryInterface {
 
     public function all(): iterable {
-        return Profile::all();
+        return Position::all();
     }
 
-    public function find(int $id): ?Profile {
-        return Profile::find($id);
+    public function find(int $id): ?Position {
+        return Position::find($id);
     }
 
-    public function create(array $data): Profile {
-        return Profile::create($data);
+    public function create(array $data): Position {
+        return Position::create($data);
     }
 
     public function update(int $id, array $data): bool {

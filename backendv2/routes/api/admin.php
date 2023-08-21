@@ -25,11 +25,12 @@ Route::post('position/update/{id}', [App\Http\Controllers\PositionController::cl
 Route::delete('position/delete/{id}', [App\Http\Controllers\PositionController::class, 'deleteProfile']);
 
 // ---------------- JUSTIFICATIONS URL's ---------------- //
-
 Route::get('justification/list', [App\Http\Controllers\JustificationController::class, 'getJustifications']);
 Route::post('justification/create', [App\Http\Controllers\JustificationController::class, 'createJustifications']);
-Route::post('justification/update/{id}', [App\Http\Controllers\JustificationController::class, '']);
 Route::delete('justification/delete/{id}', [App\Http\Controllers\JustificationController::class, '']);
+
+Route::post('justification/accept/{id}', [App\Http\Controllers\JustificationController::class, 'acceptJustifications']);
+Route::post('justification/decline/{id}', [App\Http\Controllers\JustificationController::class, 'declineJustifications']);
 
 Route::get('users/list', [App\Http\Controllers\UserController::class, 'showProfileData']);
 

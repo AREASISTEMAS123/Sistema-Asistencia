@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
              'image' => 'foto.jpg',
              'date_start' => '2023-05-09',
              'date_end' => '2023-05-09',
-             'position_id' => '1',
+             //'position_id' => '1',
 
              'email' => 'torresrodrigo752@gmail.com',
              'password' => bcrypt('71111544'),

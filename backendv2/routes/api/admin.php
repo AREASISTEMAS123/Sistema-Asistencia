@@ -4,9 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::middleware(['auth:sanctum'])->group(function () {
 
 // ---------------- DEPARTMENTS URL's ---------------- //
 Route::get('departments/list', [App\Http\Controllers\DepartmentsController::class, 'getDepartments']);
@@ -25,4 +23,7 @@ Route::get('profile/list', [App\Http\Controllers\ProfileController::class, 'getP
 Route::post('profile/create', [App\Http\Controllers\ProfileController::class, 'createProfile']);
 Route::post('profile/update/{id}', [App\Http\Controllers\ProfileController::class, 'updateProfile']);
 Route::delete('profile/delete/{id}', [App\Http\Controllers\ProfileController::class, 'deleteProfile']);
+
+
+});
 

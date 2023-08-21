@@ -16,23 +16,23 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id('id');
             $table->string('username');
+            $table->string('name');
             $table->string('surname');
             $table->string('email');
             $table->string('password');
             $table->boolean('status');
             $table->string('dni');
-            $table->string('profile');
             $table->string('cellphone');
             $table->string('shift');
             $table->date('birthday');
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('remember_token')->nullable();
             $table->string('image');
             $table->date('date_start');
             $table->date('date_end');
+            $table->unsignedBigInteger('position_id');
+            $table->foreign('position_id')->references('id')->on('positions');
 
-            $table->unsignedBigInteger('profile_id');
-            $table->foreign('profile_id')->references('id')->on('profile')->onDelete('cascade');
-
-            $table->rememberToken();
             $table->timestamps();
         });
     }

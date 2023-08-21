@@ -19,11 +19,19 @@ Route::post('cores/update/{id}', [App\Http\Controllers\CoresController::class, '
 Route::delete('cores/delete/{id}', [App\Http\Controllers\CoresController::class, 'deleteCore']);
 
 // ---------------- PROFILES URL's ---------------- //
-Route::get('profile/list', [App\Http\Controllers\ProfileController::class, 'getProfiles']);
-Route::post('profile/create', [App\Http\Controllers\ProfileController::class, 'createProfile']);
-Route::post('profile/update/{id}', [App\Http\Controllers\ProfileController::class, 'updateProfile']);
-Route::delete('profile/delete/{id}', [App\Http\Controllers\ProfileController::class, 'deleteProfile']);
+Route::get('position/list', [App\Http\Controllers\PositionController::class, 'getProfiles']);
+Route::post('position/create', [App\Http\Controllers\PositionController::class, 'createProfile']);
+Route::post('position/update/{id}', [App\Http\Controllers\PositionController::class, 'updateProfile']);
+Route::delete('position/delete/{id}', [App\Http\Controllers\PositionController::class, 'deleteProfile']);
 
+// ---------------- JUSTIFICATIONS URL's ---------------- //
+
+Route::get('justification/list', [App\Http\Controllers\JustificationController::class, 'getJustifications']);
+Route::post('justification/create', [App\Http\Controllers\JustificationController::class, 'createJustifications']);
+Route::post('justification/update/{id}', [App\Http\Controllers\JustificationController::class, '']);
+Route::delete('justification/delete/{id}', [App\Http\Controllers\JustificationController::class, '']);
+
+Route::get('users/list', [App\Http\Controllers\UserController::class, 'showProfileData']);
 // ---------------- BIRTHDAYS URL's ---------------- //
 Route::get('/birthday/details', [\App\Http\Controllers\BirthdayController::class, 'detailsbirthdayMonth']);
 Route::get('/birthday/nextBirthday', [\App\Http\Controllers\BirthdayController::class, 'getUpcomingBirthdaysWithUsers']);

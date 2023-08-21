@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Position extends Model
+class JustificationStatus extends Model
 {
     use HasFactory;
+
     protected $fillable = [
-        'name',
-        'core_id',
+        'name'
     ];
 
     protected $hidden = [
@@ -18,8 +18,8 @@ class Position extends Model
         'updated_at',
     ];
 
-    public function department()
+    public function user()
     {
-        return $this->belongsTo(Core::class, 'core_id', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

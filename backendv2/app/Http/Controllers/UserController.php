@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\RegisterRequest;
 use Illuminate\Http\Request;
 use App\Repositories\UserRepositories\UserRepositoryInterface;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -32,6 +33,11 @@ class UserController extends Controller
         }
 
         return response()->json($user);
+    }
+
+    public function showProfileData(){
+        $users = User::with('position.department.department')->get();
+        return response()->json($users);
     }
 
     public function store(RegisterRequest $request)

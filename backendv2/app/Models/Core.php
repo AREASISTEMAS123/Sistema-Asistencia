@@ -13,6 +13,11 @@ class Core extends Model
         'department_id',
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
     public function department()
     {
         return $this->belongsTo(Department::class, 'department_id', 'id');
@@ -20,6 +25,6 @@ class Core extends Model
 
     public function profile()
     {
-        return $this->hasMany(Profile::class, 'cores_id', 'id');
+        return $this->hasMany(Profile::class, 'core_id', 'id');
     }
 }

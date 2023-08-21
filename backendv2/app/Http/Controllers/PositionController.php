@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\PositionService;
 use Illuminate\Http\Request;
 
-class ProfileController extends Controller {
+class PositionController extends Controller {
     protected $positionService;
 
     public function __construct(PositionService $positionService) {

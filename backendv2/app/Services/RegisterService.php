@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\User;
-use App\Repositories\UserRepositoryInterface;
+use App\Repositories\UserRepositories\UserRepositoryInterface;
 use Illuminate\Support\Facades\Hash;
 
-class UserService {
+class RegisterService {
     protected $userRepository;
 
 

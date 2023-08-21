@@ -6,15 +6,15 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
-use App\Services\UserService;
+use App\Services\RegisterService;
 use Illuminate\Http\JsonResponse;
 
 class RegisterController extends Controller {
     protected $userService;
 
-    public function __construct(UserService $userService) 
+    public function __construct(RegisterService $RegisterService) 
     {
-        $this->userService = $userService;
+        $this->userService = $RegisterService;
     }
 
     public function register(RegisterRequest $request): JsonResponse 
@@ -28,7 +28,6 @@ class RegisterController extends Controller {
             ], 201);
 
         } catch (\Exception $e) {
-            // Puedes mejorar el manejo de errores con un logger o dando respuestas más específicas
             return response()->json(['error' => 'Registration failed'], 500);
         }
     }

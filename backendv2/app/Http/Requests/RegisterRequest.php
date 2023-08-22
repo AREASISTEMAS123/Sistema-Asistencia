@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\ValidationException;
 
 class RegisterRequest extends FormRequest
 {
@@ -24,18 +26,18 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'username' => 'required|string|max:191',
+            'username' => 'string|max:191',
             'name' => 'required|string|max:191',
             'surname' => 'required|string|max:191',
             'email' => 'required|string|email|max:191|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-            'status' => 'required|bool',
-            'dni' => 'required|string|max:20',
+            'password' => 'string|min:8',
+            'status' => 'bool',
+            'dni' => 'required|string|max:20|unique:users',
             'position_id' => 'required|int|max:191',
             'cellphone' => 'required|string|max:11',
             'shift' => 'required|string|max:191',
             'birthday' => 'required|date|max:191',
-            'image' => 'required|string|max:191',
+            'image' => 'required',
             'date_start' => 'required|date|max:191',
             'date_end' => 'required|date|max:191',
         ];
@@ -49,9 +51,9 @@ class RegisterRequest extends FormRequest
     public function messages()
     {
         return [
-            'username.required' => 'El nombre de usuario es obligatorio.',
-            'username.string' => 'El nombre de usuario debe ser una cadena de texto.',
-            'username.max' => 'El nombre de usuario no debe exceder los 191 caracteres.',
+            //'username.required' => 'El nombre de usuario es obligatorio.',
+            //'username.string' => 'El nombre de usuario debe ser una cadena de texto.',
+            //'username.max' => 'El nombre de usuario no debe exceder los 191 caracteres.',
 
             'surname.required' => 'El apellido es obligatorio.',
             'surname.string' => 'El apellido debe ser una cadena de texto.',
@@ -63,10 +65,12 @@ class RegisterRequest extends FormRequest
             'email.max' => 'El email no debe exceder los 191 caracteres.',
             'email.unique' => 'Este email ya está en uso.',
 
-            'password.required' => 'La contraseña es obligatoria.',
-            'password.string' => 'La contraseña debe ser una cadena de texto.',
-            'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
-            'password.confirmed' => 'Las contraseñas no coinciden.',
+            'position_id.required' =>'La posicion es requerida',
+
+            //'password.required' => 'La contraseña es obligatoria.',
+            //'password.string' => 'La contraseña debe ser una cadena de texto.',
+            //'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
+            //'password.confirmed' => 'Las contraseñas no coinciden.',
 
             'dni.required' => 'El DNI es obligatorio.',
             'dni.max' => 'El DNI no debe exceder los 20 caracteres.',
@@ -94,5 +98,11 @@ class RegisterRequest extends FormRequest
             'date_end.date' => 'Debes introducir una fecha de finalización válida.',
             'date_end.max' => 'La fecha de finalización no debe exceder los 191 caracteres.',
         ];
+    }
+
+    protected function failedValidation(Validator $validator) {
+        throw new ValidationException($validator, response()->json([
+            'errors' => $validator->errors()
+        ], 422));
     }
 }

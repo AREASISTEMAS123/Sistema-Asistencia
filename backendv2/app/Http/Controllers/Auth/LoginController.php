@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Services\LoginService;
 use Illuminate\Http\JsonResponse;
+use App\Models\User;
 
 class LoginController extends Controller
 {
@@ -31,9 +32,12 @@ class LoginController extends Controller
         }
 
         $token = $this->loginService->createTokenForUser($loggedInUser);
-
+        $user = User::where('username', $request['username'])->first(['id','name','surname','image']);
+        $role = $loggedInUser->roles->first();
         return response()->json([
-            'acces_token' => $token
+            'acces_token' => $token,
+            'user' => $user,
+            'role' => $role
         ]);
     }
 }

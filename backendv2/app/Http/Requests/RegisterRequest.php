@@ -25,18 +25,19 @@ class RegisterRequest extends FormRequest
     {
         return [
             'username' => 'required|string|max:191',
+            'name' => 'required|string|max:191',
             'surname' => 'required|string|max:191',
             'email' => 'required|string|email|max:191|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'dni' => 'required|string|max:20|unique:dni',
-            // 'profile' => 'required|string|max:191|confirmed',
-            'cellphone' => 'required|string|max:11|unique:cellphone',
+            'status' => 'required|bool',
+            'dni' => 'required|string|max:20',
+            'position_id' => 'required|int|max:191',
+            'cellphone' => 'required|string|max:11',
             'shift' => 'required|string|max:191',
             'birthday' => 'required|date|max:191',
             'image' => 'required|string|max:191',
             'date_start' => 'required|date|max:191',
             'date_end' => 'required|date|max:191',
-            // 'cores_id' => 'required|int|max:5|confirmed'
         ];
     }
 

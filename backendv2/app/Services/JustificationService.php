@@ -19,17 +19,24 @@ class JustificationService {
     }
 
     public function createJustification(array $data) {
-
+        //Por default el status == 3 (En Proceso)
         $data["status"] = 3;
+
+        //Por default la fecha de hoy
+        $data["justification_date"] = date('Y-m-d');
+
+        //Por default el usuario logueado
         $user_id = auth()->id();
         $data["user_id"] = $user_id;
 
+        //Redireccion de imagen a carpeta local
         $file = $data['evidence'];
         $folderName = date("Y-m-d"); 
         $path = "justifications/" . $folderName; 
         $filename = time() . "-" . $file->getClientOriginalName();
         $file->move($path, $filename);
 
+        //Guardado de ruta en base de datos
         $data['evidence'] = $path . "/" . $filename;
 
         return $this->justificationRepository->create($data);

@@ -41,9 +41,9 @@ class PasswordResetRequest extends Notification
     public function toMail($notifiable)
     {
         $url = url('/api/password/find/'.$this->token);
-        $appUrl = config('app.url');  // Obtiene el valor de APP_URL desde el archivo config/app.php
 
-        $resetPasswordUrl = $appUrl . '/api/password/reset/' . $this->token;
+
+        $resetPasswordUrl ='http://localhost:5173/restablecer-contraseña?token=' . $this->token;
 
         return (new MailMessage)
             ->line('Recibiste este correo porque recibimos una solicitud para cambiar la contraseña de tu cuenta.')

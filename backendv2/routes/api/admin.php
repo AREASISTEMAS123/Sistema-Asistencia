@@ -32,7 +32,6 @@ Route::post('justification/accept/{id}', [App\Http\Controllers\JustificationCont
 Route::post('justification/decline/{id}', [App\Http\Controllers\JustificationController::class, 'declineJustifications']);
 
 // ---------------- USERS URL´s ---------------------- //
-
 Route::get('users/index', [App\Http\Controllers\UserController::class, 'index']);
 Route::get('users/index/{id}', [App\Http\Controllers\UserController::class, 'show']);
 Route::get('users/list', [App\Http\Controllers\UserController::class, 'showProfileData']);
@@ -42,7 +41,8 @@ Route::get('/birthday/details', [\App\Http\Controllers\BirthdayController::class
 Route::get('/birthday/nextBirthday', [\App\Http\Controllers\BirthdayController::class, 'getUpcomingBirthdaysWithUsers']);
 
 // ---------------- ATTENDANCES URL's --------------- //
-
 Route::post('attendance/index', [App\Http\Controllers\AttendanceController::class, 'index']);
+Route::post('attendance/create', [App\Http\Controllers\AttendanceController::class, 'createAttendance']);
+
 });
 

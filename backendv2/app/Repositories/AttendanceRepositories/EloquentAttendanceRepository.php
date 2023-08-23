@@ -6,7 +6,7 @@ namespace App\Repositories\AttendanceRepositories;
 
 use App\Models\Attendance;
 
-class EloquentAttendanceRepository extends AttendanceRepositoryInterface {
+class EloquentAttendanceRepository implements AttendanceRepositoryInterface {
 
     public function all(): iterable {
         return Attendance::all();

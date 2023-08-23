@@ -1,9 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Password\ChangeController;
 
 Route::middleware(['auth:sanctum'])->group(function () {
+// ---------------- PASSWORD URL's ---------------- //
+Route::post('changePassword', ChangeController::class)->name('changePassword');
 
 // ---------------- DEPARTMENTS URL's ---------------- //
 Route::get('departments/list', [App\Http\Controllers\DepartmentsController::class, 'getDepartments']);

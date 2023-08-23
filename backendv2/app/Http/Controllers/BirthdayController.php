@@ -16,7 +16,7 @@ class BirthdayController extends Controller
         $month = $request->input('m'); // Obtener el valor del parámetro "m" (mes)
         $day = $request->input('d');   // Obtener el valor del parámetro "d" (día), si está presente
 
-        $query = User::whereMonth('birthday', $month);
+        $query = User::whereMonth('birthday', $month)->with('position.core.department');
 
         if (!empty($day)) {
             $query->whereDay('birthday', $day);

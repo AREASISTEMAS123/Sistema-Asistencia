@@ -10,6 +10,7 @@ use App\Notifications\PasswordResetRequest;
 use App\Notifications\PasswordResetSuccess;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class ResetController extends Controller
 {
@@ -19,6 +20,7 @@ class ResetController extends Controller
         $request->validate([
             'email' => 'required|string|email',
         ]);
+
         $user = User::where('email', $request->email)->first();
         if (!$user)
             return response()->json([
@@ -59,11 +61,18 @@ class ResetController extends Controller
 
     public function reset(Request $request)
     {
-        $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string|confirmed',
-            'token' => 'required|string'
-        ]);
+        try {
+            $request->validate([
+                'email' => 'required|string|email',
+                'password' => 'required|string|confirmed',
+                'token' => 'required|string'
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation error',
+                'errors' => $e->errors()
+            ], 422);
+        }
         $passwordReset = PasswordReset::where('token', $request->token)->first();
         if (!$passwordReset)
             return response()->json([
@@ -74,6 +83,7 @@ class ResetController extends Controller
             return response()->json([
                 'message' => 'No podemos encontrar un usuario con ese correo electronico.'
             ], 404);
+
         $user->password = bcrypt($request->password);
         $user->save();
         $passwordReset->delete();

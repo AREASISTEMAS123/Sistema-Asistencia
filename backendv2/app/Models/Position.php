@@ -18,7 +18,7 @@ class Position extends Model
         'updated_at',
     ];
 
-    public function department()
+    public function core()
     {
         return $this->belongsTo(Core::class, 'core_id', 'id');
     }

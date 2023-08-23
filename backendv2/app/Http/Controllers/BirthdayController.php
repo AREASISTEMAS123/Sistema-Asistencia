@@ -33,7 +33,7 @@ class BirthdayController extends Controller
         $currentDate = now();
         $userShift = auth()->user()->shift; // Obtener el turno del usuario logeado
 
-        $upcomingBirthdays = User::whereMonth('birthday', $currentDate->month)
+        $upcomingBirthdays = User::whereMonth('birthday', $currentDate->month)->with('position.core.department')
             ->whereDay('birthday', '>=', $currentDate->day)
             ->where('shift', $userShift) // Filtrar por turno
             ->orderByRaw('DAY(birthday)')

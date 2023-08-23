@@ -27,7 +27,7 @@ class UserController extends Controller
     public function show($id)
     {
         $user = $this->userRepository->find($id);
-        
+
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
         }
@@ -36,7 +36,7 @@ class UserController extends Controller
     }
 
     public function showProfileData(){
-        $users = User::with('position.department.department')->get();
+        $users = User::with('position.core.department')->get();
         return response()->json($users);
     }
 

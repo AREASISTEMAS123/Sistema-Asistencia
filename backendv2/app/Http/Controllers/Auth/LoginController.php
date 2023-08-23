@@ -35,7 +35,7 @@ class LoginController extends Controller
         $user = User::where('username', $request['username'])->first(['id','name','surname','image']);
         $role = $loggedInUser->roles->first();
         return response()->json([
-            'acces_token' => $token,
+            'access_token' => $token,
             'user' => $user,
             'role' => $role
         ]);

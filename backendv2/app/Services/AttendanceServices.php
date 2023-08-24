@@ -7,6 +7,9 @@ namespace App\Services;
 use App\Models\Attendance;
 use App\Repositories\AttendanceRepositories\AttendanceRepositoryInterface;
 use Illuminate\Http\Request;
+use DateTime;
+use DateTimeZone;
+
 
 class AttendanceServices {
     protected $attendanceRepository;
@@ -19,12 +22,22 @@ class AttendanceServices {
         return $this->attendanceRepository->all();
     }
 
-    private function getCheckInTimeForUser($userId) {
-        // Lógica para obtener hora cheque de entrada de usuario 
-      }
+    private function isLateForCheckIn($checkInTime) {
+        $checkInLimit = new DateTime('08:10', new DateTimeZone('America/Lima'));
+        $checkInTime = new DateTime($checkInTime, new DateTimeZone('America/Lima'));
+    
+        return $checkInTime > $checkInLimit;
+    }
       
     private function uploadImage($image) {
         // Subir imagen al servidor
+        $file = $image;
+        $folderName = date("Y-m-d"); 
+        $path = "attendances/" . $folderName; 
+        $filename = time() . "-" . $file->getClientOriginalName();
+        $file->move($path, $filename);  
+
+        return $path . "/" . $filename;
     }
 
     public function store(array $data)
@@ -38,7 +51,7 @@ class AttendanceServices {
         // Obtener el registro de asistencia del usuario para la fecha actual
         $attendance_find = Attendance::where('user_id', $authUser->id)
             ->whereDate('date', date('Y-m-d'))
-            ->first(); // Utilizamos 'first' en lugar de 'get' para obtener un solo registro
+            ->first(); 
     
         if (empty($attendance_find)) {
             // Creamos el registro de asistencia
@@ -48,34 +61,33 @@ class AttendanceServices {
     
             $new_attendance->date = date('Y-m-d');
             $new_attendance->admission_time = date('H:i');
-            $new_attendance->attendance = 1;
 
-            //Captura de la Imagen de Entrada
-            $new_attendance->admission_image = $data['admission_image'];
+            // Verificar si llegó tarde al check-in
+            if ($this->isLateForCheckIn($new_attendance->admission_time)) {
+                // El usuario llegó tarde
+                $new_attendance->delay = 1;
+            } else {
+                // El usuario llegó temprano
+                $new_attendance->attendance = 1;
+            }
 
-            //Redireccion de imagen a carpeta local
-            $file = $data['admission_image'];
-            $folderName = date("Y-m-d"); 
-            $path = "attendances/" . $folderName; 
-            $filename = time() . "-" . $file->getClientOriginalName();
-            $file->move($path, $filename);
+            $path = $this->uploadImage($data['admission_image']);
+
+            //Actualizacion de ruta de la imagen de salida
+            $new_attendance->admission_image = $path;
     
             $new_attendance->save();
             return $new_attendance;
+
         } else {
             // Actualizamos el registro de asistencia existente
             $attendance_find->departure_time = date('H:i');
 
-            //Redireccion de imagen a carpeta local
-            $file = $data['departure_image'];
-            $folderName = date("Y-m-d"); 
-            $path = "attendances/" . $folderName; 
-            $filename = time() . "-" . $file->getClientOriginalName();
-            $file->move($path, $filename);
+            $path = $this->uploadImage($data['departure_image']);
 
             //Actualizacion de ruta de la imagen de salida
-            $attendance_find->departure_image = $data['departure_image'];
-    
+            $attendance_find->departure_image = $path;  
+
             $attendance_find->save();
             return $attendance_find;
         }

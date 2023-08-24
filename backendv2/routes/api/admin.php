@@ -19,7 +19,7 @@ Route::post('cores/create', [App\Http\Controllers\CoresController::class, 'creat
 Route::post('cores/update/{id}', [App\Http\Controllers\CoresController::class, 'updateCore']);
 Route::delete('cores/delete/{id}', [App\Http\Controllers\CoresController::class, 'deleteCore']);
 
-// ---------------- PROFILES URL's ---------------- //
+// ---------------- POSITIONS URL's ---------------- //
 Route::get('position/list', [App\Http\Controllers\PositionController::class, 'getProfiles']);
 Route::post('position/create', [App\Http\Controllers\PositionController::class, 'createProfile']);
 Route::post('position/update/{id}', [App\Http\Controllers\PositionController::class, 'updateProfile']);
@@ -33,11 +33,17 @@ Route::delete('justification/delete/{id}', [App\Http\Controllers\JustificationCo
 Route::post('justification/accept/{id}', [App\Http\Controllers\JustificationController::class, 'acceptJustifications']);
 Route::post('justification/decline/{id}', [App\Http\Controllers\JustificationController::class, 'declineJustifications']);
 
+// ---------------- USERS URL´s ---------------------- //
+Route::get('users/index', [App\Http\Controllers\UserController::class, 'index']);
+Route::get('users/index/{id}', [App\Http\Controllers\UserController::class, 'show']);
 Route::get('users/list', [App\Http\Controllers\UserController::class, 'showProfileData']);
+
 // ---------------- BIRTHDAYS URL's ---------------- //
 Route::get('/birthday/details', [\App\Http\Controllers\BirthdayController::class, 'detailsbirthdayMonth']);
 Route::get('/birthday/nextBirthday', [\App\Http\Controllers\BirthdayController::class, 'getUpcomingBirthdaysWithUsers']);
 
-
+// ---------------- ATTENDANCES URL's --------------- //
+Route::post('attendance/index', [App\Http\Controllers\AttendanceController::class, 'index']);
+Route::post('attendance/create', [App\Http\Controllers\AttendanceController::class, 'createAttendance']);
 });
 

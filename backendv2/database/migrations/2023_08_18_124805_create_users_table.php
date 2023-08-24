@@ -30,7 +30,7 @@ return new class extends Migration
             $table->string('image');
             $table->date('date_start');
             $table->date('date_end');
-            $table->unsignedBigInteger('position_id');
+            $table->unsignedBigInteger('position_id')->nullable();
             $table->foreign('position_id')->references('id')->on('positions');
 
             $table->timestamps();

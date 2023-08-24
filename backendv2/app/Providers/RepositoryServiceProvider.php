@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Repositories\AttendanceRepositories\AttendanceRepositoryInterface;
+use App\Repositories\AttendanceRepositories\EloquentAttendanceRepository;
 use App\Repositories\JustificationRepositories\EloquentJustificationRepository;
 use App\Repositories\ProfileRepositories\EloquentPositionRepository;
 use App\Repositories\UserRepositories\EloquentUserRepository;
@@ -22,6 +24,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(UserRepositoryInterface::class, EloquentUserRepository::class);
         $this->app->bind(PositionRepositoryInterface::class, EloquentPositionRepository::class);
         $this->app->bind(JustificationRepositoryInterface::class, EloquentJustificationRepository::class);
+        $this->app->bind(AttendanceRepositoryInterface::class, EloquentAttendanceRepository::class);
     }
 
     /**

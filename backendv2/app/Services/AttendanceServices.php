@@ -27,38 +27,57 @@ class AttendanceServices {
         // Subir imagen al servidor
     }
 
-    public function store(array $data) 
-    {
+    public function store(array $data)
+    {   
+        // Establecer la zona horaria a America/Lima
+        date_default_timezone_set('America/Lima');
+
         // Obtener usuario autenticado
         $authUser = auth()->user();
-        
+    
         // Obtener el registro de asistencia del usuario para la fecha actual
-        $attendance = Attendance::where('user_id', $authUser)
+        $attendance_find = Attendance::where('user_id', $authUser->id)
             ->whereDate('date', date('Y-m-d'))
-            ->first();
-
-        if (empty($attendance)) {
+            ->first(); // Utilizamos 'first' en lugar de 'get' para obtener un solo registro
+    
+        if (empty($attendance_find)) {
             // Creamos el registro de asistencia
-            $attendance = new Attendance;
+            $new_attendance = new Attendance;
+    
+            $new_attendance->user_id = $authUser->id;
+    
+            $new_attendance->date = date('Y-m-d');
+            $new_attendance->admission_time = date('H:i');
+            $new_attendance->attendance = 1;
 
-            $attendance->user_id = $authUser->id;
-        
-            $attendance->date = date('Y-m-d');
-            $attendance->admission_time = date('H:i');
-            $attendance->admission_image = $data['admission_image'];
+            //Captura de la Imagen de Entrada
+            $new_attendance->admission_image = $data['admission_image'];
 
-            $attendance->save();
-            
-            echo "CREATE_ATTENDANCE";
-            return $this->attendanceRepository->create($data);
-
+            //Redireccion de imagen a carpeta local
+            $file = $data['admission_image'];
+            $folderName = date("Y-m-d"); 
+            $path = "attendances/" . $folderName; 
+            $filename = time() . "-" . $file->getClientOriginalName();
+            $file->move($path, $filename);
+    
+            $new_attendance->save();
+            return $new_attendance;
         } else {
-            $attendance_id = $attendance->id;
-            $attendance->departure_time = date('H:i');
-            $attendance->departure_image = $data['departure_image'];
+            // Actualizamos el registro de asistencia existente
+            $attendance_find->departure_time = date('H:i');
 
-            echo "UPDATE_ATTENDANCE";
-            return $this->attendanceRepository->update($attendance_id, $data);
+            //Redireccion de imagen a carpeta local
+            $file = $data['departure_image'];
+            $folderName = date("Y-m-d"); 
+            $path = "attendances/" . $folderName; 
+            $filename = time() . "-" . $file->getClientOriginalName();
+            $file->move($path, $filename);
+
+            //Actualizacion de ruta de la imagen de salida
+            $attendance_find->departure_image = $data['departure_image'];
+    
+            $attendance_find->save();
+            return $attendance_find;
         }
     }
 }

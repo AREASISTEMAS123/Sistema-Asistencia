@@ -43,6 +43,5 @@ Route::get('/birthday/nextBirthday', [\App\Http\Controllers\BirthdayController::
 // ---------------- ATTENDANCES URL's --------------- //
 Route::post('attendance/index', [App\Http\Controllers\AttendanceController::class, 'index']);
 Route::post('attendance/create', [App\Http\Controllers\AttendanceController::class, 'createAttendance']);
-
 });
 

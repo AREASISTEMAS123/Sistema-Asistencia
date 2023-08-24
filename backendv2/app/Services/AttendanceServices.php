@@ -9,7 +9,7 @@ use App\Repositories\AttendanceRepositories\AttendanceRepositoryInterface;
 use Illuminate\Http\Request;
 use DateTime;
 use DateTimeZone;
-
+use App\Models\Justification;
 
 class AttendanceServices {
     protected $attendanceRepository;
@@ -40,6 +40,17 @@ class AttendanceServices {
         return $path . "/" . $filename;
     }
 
+    private function hasJustification() {
+        $today = date('Y-m-d');
+        $authUser = auth()->user();
+        
+        $justificationExists = Justification::where('user_id', $authUser->id)
+            ->whereDate('justification_date', $today)
+            ->first('type');
+        
+        return $justificationExists->type;
+    }
+
     public function store(array $data)
     {   
         // Establecer la zona horaria a America/Lima
@@ -62,10 +73,18 @@ class AttendanceServices {
             $new_attendance->date = date('Y-m-d');
             $new_attendance->admission_time = date('H:i');
 
+            // Verificar si existe una justificación y actualizar la columna justifications
+            $type = $this->hasJustification();
+
             // Verificar si llegó tarde al check-in
             if ($this->isLateForCheckIn($new_attendance->admission_time)) {
                 // El usuario llegó tarde
-                $new_attendance->delay = 1;
+                if ($type == 1){
+                    $new_attendance->justification = 1;
+                    $new_attendance->delay = 1;
+                } else {
+                    $new_attendance->delay = 1;
+                }
             } else {
                 // El usuario llegó temprano
                 $new_attendance->attendance = 1;

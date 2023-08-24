@@ -4,10 +4,10 @@ namespace Database\Seeders;
 
 use App\Models\Department;
 use App\Models\Core;
+use App\Models\JustificationStatuses;
 use App\Models\Position;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 
 class DCPSeeder extends Seeder
 {
@@ -30,6 +30,18 @@ class DCPSeeder extends Seeder
         Position::create([
             'name' => 'Backend',
             'core_id' => 1
+        ]);
+
+        JustificationStatuses::create([
+            'name' => 'En Proceso',
+        ]);
+
+        JustificationStatuses::create([
+            'name' => 'Aceptado',
+        ]);
+
+        JustificationStatuses::create([
+            'name' => 'Rechazado',
         ]);
     }
 }

@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('justifications_status', function (Blueprint $table) {
+        Schema::create('justification_statuses', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->timestamps();
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('justifications_status');
+        Schema::dropIfExists('justificationStatuses');
     }
 };

@@ -30,6 +30,6 @@ class Justification extends Model
 
     public function status()
     {
-        return $this->belongsTo(JustificationStatus::class, 'status', 'id');
+        return $this->belongsTo(JustificationStatuses::class, 'status', 'id');
     }
 }

@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\RegisterRequest;
+
 use Illuminate\Http\Request;
-use App\Repositories\UserRepositories\UserRepositoryInterface;
+use App\Services\UserService;
 use App\Models\User;
 
 class UserController extends Controller
 {
-    protected $userRepository;
+    private $userService;
 
-    public function __construct(UserRepositoryInterface $userRepository)
+    public function __construct(UserService $userService)
     {
-        $this->userRepository = $userRepository;
+        $this->userService = $userService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $users = $this->userRepository->all();
+        $users = $this->userService->getFilteredUsers($request->all());
         return response()->json($users);
     }
 

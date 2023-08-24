@@ -34,7 +34,7 @@ Route::post('justification/accept/{id}', [App\Http\Controllers\JustificationCont
 Route::post('justification/decline/{id}', [App\Http\Controllers\JustificationController::class, 'declineJustifications']);
 
 // ---------------- USERS URL´s ---------------------- //
-Route::get('users/index', [App\Http\Controllers\UserController::class, 'index']);
+Route::get('users', [App\Http\Controllers\UserController::class, 'index']);
 Route::get('users/index/{id}', [App\Http\Controllers\UserController::class, 'show']);
 Route::get('users/list', [App\Http\Controllers\UserController::class, 'showProfileData']);
 

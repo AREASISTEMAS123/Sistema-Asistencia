@@ -59,11 +59,19 @@ class UserService
         ];
     }
 
-    public function update(User $user, array $data): User
+    public function update($user, array $data): User
     {
+        $user = User::find($user);
         if (isset($data['dni'])) {
             $data['password'] = Hash::make($data['dni']);
             $data['username'] = $data['dni'];
+        }
+
+        if (isset($data['role_id'])) {
+            $role = Role::find($data['role_id']);
+            if ($role) {
+                $user->syncRoles([$role->name]); // Asignar el nuevo rol
+            }
         }
 
         if (isset($data['image'])) {
@@ -82,16 +90,9 @@ class UserService
 
             $data['image'] = $nombreArchivo;
         }
-
         $user->update($data);
 
-        if (isset($data['role_id'])) {
-            $role = Role::find($data['role_id']);
-            if ($role) {
-                $user->syncRoles([$role->name]); // Asignar el nuevo rol
-            }
-        }
-
         return $user;
+
     }
 }

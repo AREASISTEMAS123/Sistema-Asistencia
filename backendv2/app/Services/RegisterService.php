@@ -35,7 +35,6 @@ class RegisterService {
 
             $user->save();
         }
-        event(new Registered($user));
         return $user;
     }
 

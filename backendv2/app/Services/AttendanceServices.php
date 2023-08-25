@@ -23,7 +23,7 @@ class AttendanceServices {
     }
 
     private function isLateForCheckIn($checkInTime) {
-        $checkInLimit = new DateTime('08:10', new DateTimeZone('America/Lima'));
+        $checkInLimit = new DateTime('08:11', new DateTimeZone('America/Lima'));
         $checkInTime = new DateTime($checkInTime, new DateTimeZone('America/Lima'));
     
         return $checkInTime > $checkInLimit;
@@ -45,10 +45,10 @@ class AttendanceServices {
         $authUser = auth()->user();
         
         $justificationExists = Justification::where('user_id', $authUser->id)
-            ->whereDate('justification_date', $today)
+            ->whereDate('justification_date', $today) //Falta condicional del status != 3
             ->first('type');
         
-        return $justificationExists->type;
+        return $justificationExists->type; // 0 | 1
     }
 
     public function store(array $data)
@@ -73,15 +73,19 @@ class AttendanceServices {
             $new_attendance->date = date('Y-m-d');
             $new_attendance->admission_time = date('H:i');
 
-            // Verificar si existe una justificación y actualizar la columna justifications
-            $type = $this->hasJustification();
-
             // Verificar si llegó tarde al check-in
             if ($this->isLateForCheckIn($new_attendance->admission_time)) {
+                
+                // Verificar si existe una justificación y actualizar la columna justifications
+                $type = $this->hasJustification(); 
+
                 // El usuario llegó tarde
                 if ($type == 1){
                     $new_attendance->justification = 1;
                     $new_attendance->delay = 1;
+                } else if ($type == 0){
+                    $new_attendance->justification = 1;
+                    $new_attendance->absence = 1;
                 } else {
                     $new_attendance->delay = 1;
                 }

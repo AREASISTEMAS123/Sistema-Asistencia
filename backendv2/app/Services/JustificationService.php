@@ -50,6 +50,11 @@ class JustificationService {
                 return response()->json(['message' => 'Esta justificacion ya ha sido aceptada o declinada'], 201);
             } else {
                 $justification->status = 1;
+
+                //Attendance::create [
+
+                //]
+
                 $justification->save();
                 return $justification;
             }

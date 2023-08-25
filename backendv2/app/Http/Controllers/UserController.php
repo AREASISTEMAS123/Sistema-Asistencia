@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 
+use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\UpdateUserRequest;
+use App\Models\Attendance;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Services\UserService;
 use App\Models\User;
@@ -26,17 +30,26 @@ class UserController extends Controller
 
     public function show($id)
     {
-        $user = $this->userRepository->find($id);
-
-        if (!$user) {
-            return response()->json(['message' => 'User not found'], 404);
+        $userData = $this->userService->getUserDetails($id);
+        if (is_null($userData)) {
+            return response()->json(['message' => 'No encontrado'], 404);
         }
-
-        return response()->json($user);
+        return response()->json($userData);
     }
 
-    public function showProfileData(){
-        $users = User::with('position.core.department')->get();
-        return response()->json($users);
+    public function update(UpdateUserRequest $request, User $user): JsonResponse
+    {
+        try {
+            $this->userService->update($user, $request->validated());
+
+            return response()->json([
+                'message' => 'User updated successfully',
+            ], 200);
+        } catch (\Exception $e) {
+            print ($e);
+            return response()->json(['error' => 'User update failed'], 500);
+        }
     }
+
+
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\PositionService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class PositionController extends Controller {
     protected $positionService;
@@ -18,6 +19,12 @@ class PositionController extends Controller {
     }
 
     public function createProfile(Request $request) {
+        $validator = Validator::make($request->all(),[
+            'name' => 'string|max:255|unique:positions',
+        ]);
+        if($validator->fails()){
+            return response()->json($validator->errors());
+        }
         $profile = $this->positionService->createPosition($request->all());
         if (!$profile) {
             return response()->json(['message' => 'Nucleo no encontrado.'], 404);
@@ -26,6 +33,12 @@ class PositionController extends Controller {
     }
 
     public function updateProfile(Request $request, $id) {
+        $validator = Validator::make($request->all(),[
+            'name' => 'string|max:255|unique:positions',
+        ]);
+        if($validator->fails()){
+            return response()->json($validator->errors());
+        }
         $updated = $this->positionService->updatePosition($id, $request->all());
         if (!$updated) {
             return response()->json(['message' => 'Nucleo no encontrado o perfil no encontrado.'], 404);

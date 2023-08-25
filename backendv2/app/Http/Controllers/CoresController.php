@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Core;
 use App\Models\Department;
+use Illuminate\Support\Facades\Validator;
 
 
 class CoresController extends Controller
@@ -16,13 +17,19 @@ class CoresController extends Controller
         $cores = Core::all();
         return response()->json($cores);
     }
-    
+
     // Crear un nuevo nucleo en la base de datos
     public function createCore(Request $request)
-    {       
+    {
+        $validator = Validator::make($request->all(),[
+            'name' => 'string|max:255|unique:cores',
+        ]);
+        if($validator->fails()){
+            return response()->json($validator->errors());
+        }
         //Creamos un nuevo objeto Cores
         $core = new Core();
-    
+
         //Setear los valores en la tabla Cores
         $core->name = $request->input('name');
 
@@ -35,14 +42,20 @@ class CoresController extends Controller
         } else {
             return response()->json(['message' => 'Departamento no encontrado.'], 404);
         }
-    
+
         //Retornamos la respuesta en formato JSON
         return response()->json(['message' => 'Nucleo creado exitosamente.', 'data' => $core], 201);
     }
-    
+
     // Actualizar un departamento en la base de datos
     public function updateCore(Request $request, $id)
-    {   
+    {
+        $validator = Validator::make($request->all(),[
+            'name' => 'string|max:255|unique:cores',
+        ]);
+        if($validator->fails()){
+            return response()->json($validator->errors());
+        }
         //Buscamos el departmento por id
         $core = Core::find($id);
 

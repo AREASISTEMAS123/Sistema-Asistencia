@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('password');
             $table->boolean('status');
+            $table->string('status_description')->nullable();
             $table->string('dni');
             $table->string('cellphone');
             $table->string('shift');

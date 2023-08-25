@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Department;
+use Illuminate\Support\Facades\Validator;
 
 
 class DepartmentsController extends Controller
@@ -18,7 +19,13 @@ class DepartmentsController extends Controller
 
     // Crear un nuevo departamento en la base de datos
     public function createDepartment(Request $request)
-    {       
+    {
+        $validator = Validator::make($request->all(),[
+            'name' => 'string|max:255|unique:departments',
+        ]);
+        if($validator->fails()){
+            return response()->json($validator->errors());
+        }
         //Creamos un nuevo objeto Departaments
         $department = new Department();
 
@@ -34,7 +41,13 @@ class DepartmentsController extends Controller
 
     // Actualizar un departamento en la base de datos
     public function updateDepartment(Request $request, $id)
-    {   
+    {
+        $validator = Validator::make($request->all(),[
+            'name' => 'string|max:255|unique:departments',
+        ]);
+        if($validator->fails()){
+            return response()->json($validator->errors());
+        }
         //Buscamos el departmento por id
         $department = Department::find($id);
 

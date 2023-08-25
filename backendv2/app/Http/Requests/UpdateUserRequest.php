@@ -2,11 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\ValidationException;
 
-class RegisterRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,10 +27,11 @@ class RegisterRequest extends FormRequest
             'username' => 'string|max:191',
             'name' => 'required|string|max:191',
             'surname' => 'required|string|max:191',
-            'email' => 'required|string|email|max:191|unique:users',
+            'email' => 'required|string|email|max:191',
             'password' => 'string|min:8',
             'status' => 'bool',
-            'dni' => 'required|string|max:20|unique:users',
+            'status_description'=>'string',
+            'dni' => 'required|string|max:20',
             'position_id' => 'required|int|max:191',
             'cellphone' => 'required|string|max:11',
             'shift' => 'required|string|max:191',
@@ -40,17 +39,16 @@ class RegisterRequest extends FormRequest
             'image' => 'required',
             'date_start' => 'required|date|max:191',
             'date_end' => 'required|date|max:191',
+            'role_id' =>'string'
         ];
     }
-
-    /**
-     * Get custom messages for validator errors.
-     *
-     * @return array<string, string>
-     */
     public function messages()
     {
         return [
+            'name.required' => 'El nombre es obligatorio.',
+            'name.string' => 'El nombre debe ser una cadena de texto.',
+            'name.max' => 'El nombre no debe exceder los 191 caracteres.',
+
             'surname.required' => 'El apellido es obligatorio.',
             'surname.string' => 'El apellido debe ser una cadena de texto.',
             'surname.max' => 'El apellido no debe exceder los 191 caracteres.',
@@ -89,11 +87,5 @@ class RegisterRequest extends FormRequest
             'date_end.date' => 'Debes introducir una fecha de finalización válida.',
             'date_end.max' => 'La fecha de finalización no debe exceder los 191 caracteres.',
         ];
-    }
-
-    protected function failedValidation(Validator $validator) {
-        throw new ValidationException($validator, response()->json([
-            'errors' => $validator->errors()
-        ], 422));
     }
 }

@@ -6,10 +6,9 @@ namespace App\Services;
 
 use App\Models\Attendance;
 use App\Repositories\AttendanceRepositories\AttendanceRepositoryInterface;
-use Illuminate\Http\Request;
 use DateTime;
 use DateTimeZone;
-
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class AttendanceServices {
     protected $attendanceRepository;
@@ -18,8 +17,9 @@ class AttendanceServices {
         $this->attendanceRepository = $attendanceRepository;
     }
 
-    public function getAllAttendances() {
-        return $this->attendanceRepository->all();
+    public function getFilteredAttendances(array $filters): LengthAwarePaginator
+    {
+        return Attendance::filter($filters)->paginate(10);
     }
 
     private function isLateForCheckIn($checkInTime) {

@@ -26,6 +26,7 @@ class User extends Authenticatable
         'email',
         'password',
         'status',
+        'status_description',
         'dni',
         'cellphone',
         'shift',

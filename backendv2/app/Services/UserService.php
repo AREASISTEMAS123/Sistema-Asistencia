@@ -12,14 +12,17 @@ class UserService
 {
     public function getFilteredUsers(array $filters): LengthAwarePaginator
     {
-        $query = User::query()->with('position.core.department');
+        $query = User::query()->with('position.core.department', 'roles');
 
         if (!empty($filters['shift'])) {
             $query->whereHas('position', fn ($q) => $q->where('shift', $filters['shift']));
         }
+        if (!empty($filters['position'])) {
+            $query->whereHas('position', fn ($q) => $q->where('id', $filters['position']));
+        }
 
         if (!empty($filters['department'])) {
-            $query->whereHas('position.core.department', fn ($q) => $q->where('name', $filters['department']));
+            $query->whereHas('position.core.department', fn ($q) => $q->where('id', $filters['department']));
         }
 
         if (!empty($filters['name'])) {
@@ -30,7 +33,7 @@ class UserService
         }
 
         if (!empty($filters['core'])) {
-            $query->whereHas('position.core', fn ($q) => $q->where('name', $filters['core']));
+            $query->whereHas('position.core', fn ($q) => $q->where('id', $filters['core']));
         }
 
         return $query->paginate(15);

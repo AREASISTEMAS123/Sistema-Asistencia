@@ -30,7 +30,7 @@ class UpdateUserRequest extends FormRequest
             'email' => 'required|string|email|max:191',
             'password' => 'string|min:8',
             'status' => 'bool',
-            'status_description'=>'string',
+            'status_description'=>'',
             'dni' => 'required|string|max:20',
             'position_id' => 'required|int|max:191',
             'cellphone' => 'required|string|max:11',

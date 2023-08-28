@@ -27,8 +27,10 @@ class UserService
 
         if (!empty($filters['name'])) {
             $query->where(function ($q) use ($filters) {
-            $q->where('name', 'LIKE', '%' . $filters['name'] . '%')
-            ->orWhere('surname', 'LIKE', '%' . $filters['name'] . '%');
+                $q->where(function ($innerQ) use ($filters) {
+                    $innerQ->where('name', 'LIKE', '%' . $filters['name'] . '%')
+                        ->orWhere('surname', 'LIKE', '%' . $filters['name'] . '%');
+                });
             });
         }
 

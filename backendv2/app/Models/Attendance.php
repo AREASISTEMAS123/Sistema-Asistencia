@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon;
 
 class Attendance extends Model
 {
@@ -47,9 +46,9 @@ class Attendance extends Model
             );
         }
     
-        if (!empty($filters['nucleo'])) {
+        if (!empty($filters['core'])) {
             $query->whereHas('user.position.core', fn($q) => 
-                $q->where('name', $filters['nucleo'])
+                $q->where('name', $filters['core'])
             );
         }
     
@@ -65,6 +64,6 @@ class Attendance extends Model
             );
         }
     
-        return $query->paginate(10);
+        return $query;
     }
 }

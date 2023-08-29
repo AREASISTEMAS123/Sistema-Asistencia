@@ -40,21 +40,21 @@ class Attendance extends Model
             $query->whereDate('date', $date);
         }
     
-        if (!empty($filters['position'])) {
-            $query->whereHas('user.position', fn($q) => 
-                $q->where('name', $filters['position'])
+        if(!empty($filters['position_id'])) {
+            $query->whereHas('user.position', fn($q) =>
+               $q->where('id', $filters['position_id'])  
+            );
+          }
+        
+        if(!empty($filters['core_id'])) {
+            $query->whereHas('user.position.core', fn($q) =>
+                $q->where('id', $filters['core_id'])
             );
         }
     
-        if (!empty($filters['core'])) {
-            $query->whereHas('user.position.core', fn($q) => 
-                $q->where('name', $filters['core'])
-            );
-        }
-    
-        if (!empty($filters['department'])) {
-            $query->whereHas('user.position.core.department', fn($q) => 
-                $q->where('name', $filters['department'])
+        if(!empty($filters['department_id'])) {
+            $query->whereHas('user.position.core.department', fn($q) =>
+                $q->where('id', $filters['department_id'])
             );
         }
     

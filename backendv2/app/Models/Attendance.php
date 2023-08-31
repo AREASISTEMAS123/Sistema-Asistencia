@@ -28,42 +28,43 @@ class Attendance extends Model
         'updated_at',
     ];
 
-    public function user() 
+    public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function scopeFilter(Builder $query, array $filters) {
+        $query = Attendance::query()->with('user.roles');
         if (!empty($filters['date'])) {
             $carbon = new \Carbon\Carbon;
             $date = $carbon->parse($filters['date'])->format('Y-m-d');
             $query->whereDate('date', $date);
         }
-    
-        if(!empty($filters['position_id'])) {
+
+        if(!empty($filters['position'])) {
             $query->whereHas('user.position', fn($q) =>
-               $q->where('id', $filters['position_id'])  
+               $q->where('id', $filters['position'])
             );
           }
-        
-        if(!empty($filters['core_id'])) {
+
+        if(!empty($filters['core'])) {
             $query->whereHas('user.position.core', fn($q) =>
-                $q->where('id', $filters['core_id'])
+                $q->where('id', $filters['core'])
             );
         }
-    
-        if(!empty($filters['department_id'])) {
+
+        if(!empty($filters['department'])) {
             $query->whereHas('user.position.core.department', fn($q) =>
-                $q->where('id', $filters['department_id'])
+                $q->where('id', $filters['department'])
             );
         }
-    
+
         if (!empty($filters['shift'])) {
-            $query->whereHas('user.position', fn($q) => 
+            $query->whereHas('user.position', fn($q) =>
                 $q->where('shift', $filters['shift'])
             );
         }
-    
+
         return $query;
     }
 }

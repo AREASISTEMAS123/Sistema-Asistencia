@@ -14,7 +14,7 @@ class CoresController extends Controller
     // Mostrar todos los nucleos
     public function getCores()
     {
-        $cores = Core::all();
+        $cores = Core::with('department')->get();
         return response()->json($cores);
     }
 

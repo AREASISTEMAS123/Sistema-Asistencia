@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\Core;
+use App\Models\Position;
 use App\Repositories\ProfileRepositories\PositionRepositoryInterface;
 
 class PositionService {
@@ -15,7 +16,8 @@ class PositionService {
     }
 
     public function getAllPositions() {
-        return $this->positionRepository->all();
+        $cores = Position::with('core.department')->get();
+        return [$cores];
     }
 
     public function createPosition(array $data) {

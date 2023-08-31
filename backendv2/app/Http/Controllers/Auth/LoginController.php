@@ -32,7 +32,7 @@ class LoginController extends Controller
         }
 
         $token = $this->loginService->createTokenForUser($loggedInUser);
-        $user = User::where('username', $request['username'])->first(['id','name','surname','image']);
+        $user = User::where('username', $request['username'])->first(['id','name','surname','image', 'shift']);
         $role = $loggedInUser->roles->first();
         return response()->json([
             'access_token' => $token,

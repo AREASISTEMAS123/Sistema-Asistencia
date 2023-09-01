@@ -38,7 +38,12 @@ class UserService
             $query->whereHas('position.core', fn ($q) => $q->where('id', $filters['core']));
         }
 
-        return $query->paginate(15);
+        $users = $query->paginate(10);
+        foreach ($users as $user) {
+            $user->image_url = $user->getImageUrlAttribute();
+        }
+
+        return $users;
     }
 
     public function getUserDetails($id)
@@ -54,6 +59,8 @@ class UserService
         $absence = $attendanceData->where("absence", "1")->where("justification","0")->count();
         $delay = $attendanceData->where("delay", "1")->where("justification","0")->count();
         $justification = $attendanceData->where("justification", "1")->count();
+        $user->image_url = $user->getImageUrlAttribute();
+
 
         return [
             "usuario" => $user,

@@ -28,7 +28,6 @@ class JustificationController extends Controller
 
     public function acceptJustifications($id) {
         $justification = $this->justificationService->acceptJustification($id);
-        
         return response()->json(['message' => 'Justificacion aceptada exitosamente.', 'data' => $justification], 201);
     }
 

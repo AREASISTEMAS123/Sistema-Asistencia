@@ -21,7 +21,7 @@ return new class extends Migration
             $table->boolean('type');
             
             $table->unsignedBigInteger('status');
-            $table->foreign('status')->references('id')->on('justifications_status')->onDelete('cascade');
+            $table->foreign('status')->references('id')->on('justification_statuses')->onDelete('cascade');
     
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

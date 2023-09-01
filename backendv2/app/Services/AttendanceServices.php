@@ -9,6 +9,7 @@ use App\Repositories\AttendanceRepositories\AttendanceRepositoryInterface;
 use DateTime;
 use DateTimeZone;
 use Illuminate\Pagination\LengthAwarePaginator;
+use App\Models\Justification;
 
 class AttendanceServices {
     protected $attendanceRepository;
@@ -23,7 +24,7 @@ class AttendanceServices {
     }
 
     private function isLateForCheckIn($checkInTime) {
-        $checkInLimit = new DateTime('08:10', new DateTimeZone('America/Lima'));
+        $checkInLimit = new DateTime('08:11', new DateTimeZone('America/Lima'));
         $checkInTime = new DateTime($checkInTime, new DateTimeZone('America/Lima'));
     
         return $checkInTime > $checkInLimit;
@@ -38,6 +39,17 @@ class AttendanceServices {
         $file->move($path, $filename);  
 
         return $path . "/" . $filename;
+    }
+
+    private function hasJustification() {
+        $today = date('Y-m-d');
+        $authUser = auth()->user();
+        
+        $justificationExists = Justification::where('user_id', $authUser->id)
+            ->whereDate('justification_date', $today) //Falta condicional del status != 3
+            ->first('type');
+        
+        return $justificationExists->type; // 0 | 1
     }
 
     public function store(array $data)
@@ -64,8 +76,20 @@ class AttendanceServices {
 
             // Verificar si llegó tarde al check-in
             if ($this->isLateForCheckIn($new_attendance->admission_time)) {
+                
+                // Verificar si existe una justificación y actualizar la columna justifications
+                $type = $this->hasJustification(); 
+
                 // El usuario llegó tarde
-                $new_attendance->delay = 1;
+                if ($type == 1){
+                    $new_attendance->justification = 1;
+                    $new_attendance->delay = 1;
+                } else if ($type == 0){
+                    $new_attendance->justification = 1;
+                    $new_attendance->absence = 1;
+                } else {
+                    $new_attendance->delay = 1;
+                }
             } else {
                 // El usuario llegó temprano
                 $new_attendance->attendance = 1;

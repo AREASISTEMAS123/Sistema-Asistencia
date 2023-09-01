@@ -10,7 +10,7 @@ use DateTime;
 use DateTimeZone;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class AttendanceServices {
+class AttendanceService {
     protected $attendanceRepository;
 
     public function __construct(AttendanceRepositoryInterface $attendanceRepository) {

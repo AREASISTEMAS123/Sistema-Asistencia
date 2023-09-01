@@ -37,6 +37,17 @@ class User extends Authenticatable
         'position_id'
     ];
 
+    public function getImageUrlAttribute()
+    {
+        // Ruta base de las imágenes en la carpeta "public/photos"
+        $baseUrl = config('app.url') . '/photos/' . $this->attributes['id'] . '/';
+
+        // Nombre de archivo de la imagen almacenado en la base de datos
+        $imageName = $this->attributes['image'];
+
+        return $baseUrl . $imageName;
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

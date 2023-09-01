@@ -36,7 +36,7 @@ class UpdateUserRequest extends FormRequest
             'cellphone' => 'required|string|max:11',
             'shift' => 'required|string|max:191',
             'birthday' => 'required|date|max:191',
-            'image' => 'required',
+            'image' => '',
             'date_start' => 'required|date|max:191',
             'date_end' => 'required|date|max:191',
             'role_id' =>'string'

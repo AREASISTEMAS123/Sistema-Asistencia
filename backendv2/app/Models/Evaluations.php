@@ -11,6 +11,8 @@ class Evaluations extends Model
 
     protected $fillable = [
         'date',
+        'user_id',
+        'evaluation_type'
     ];
 
     public function user() {

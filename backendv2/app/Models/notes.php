@@ -10,7 +10,8 @@ class notes extends Model
     use HasFactory;
 
     protected $fillable = [
-        'note'
+        'note',
+        'evaluations_id'
     ];
     // evaluation_id
     public function evaluation() {

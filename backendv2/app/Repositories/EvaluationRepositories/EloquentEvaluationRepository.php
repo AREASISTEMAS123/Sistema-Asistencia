@@ -6,7 +6,7 @@ namespace App\Repositories\EvaluationRepositories;
 
 use App\Models\Evaluations;
 
-class EloquentEvaluationsRepository implements EvaluationRepositoryInterface {
+class EloquentEvaluationRepository implements EvaluationRepositoryInterface {
 
     public function all(): iterable {
         return Evaluations::all();

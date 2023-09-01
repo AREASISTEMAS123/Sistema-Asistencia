@@ -17,7 +17,7 @@ class AttendanceController extends Controller
         $this->attendanceService = $attendanceService;
     }
 
-    public function index(Request $request)
+    public function getAttendances(Request $request)
     {
         $filters = $request->all(); 
         $attendances = $this->attendanceService->getFilteredAttendances($filters);

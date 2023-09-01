@@ -43,5 +43,6 @@ class DCPSeeder extends Seeder
         JustificationStatuses::create([
             'name' => 'Rechazado',
         ]);
+        
     }
 }

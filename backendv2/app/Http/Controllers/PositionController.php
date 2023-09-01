@@ -13,10 +13,17 @@ class PositionController extends Controller {
         $this->positionService = $positionService;
     }
 
-    public function getProfiles() {
+    public function getProfiles()
+    {
         $profiles = $this->positionService->getAllPositions();
-        return response()->json($profiles);
+
+        $combinedProfiles = array_reduce($profiles, function ($carry, $profileCollection) {
+            return array_merge($carry, $profileCollection->all());
+        }, []);
+
+        return $combinedProfiles;
     }
+
 
     public function createProfile(Request $request) {
         $validator = Validator::make($request->all(),[

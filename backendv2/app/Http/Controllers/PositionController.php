@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Validation\Rule;
 use App\Services\PositionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class PositionController extends Controller {
+class PositionController extends Controller
+{
     protected $positionService;
 
-    public function __construct(PositionService $positionService) {
+    public function __construct(PositionService $positionService)
+    {
         $this->positionService = $positionService;
     }
 
@@ -25,11 +28,13 @@ class PositionController extends Controller {
     }
 
 
-    public function createProfile(Request $request) {
-        $validator = Validator::make($request->all(),[
+
+    public function createProfile(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'name' => 'string|max:255|unique:positions',
         ]);
-        if($validator->fails()){
+        if ($validator->fails()) {
             return response()->json($validator->errors());
         }
         $profile = $this->positionService->createPosition($request->all());
@@ -39,11 +44,18 @@ class PositionController extends Controller {
         return response()->json(['message' => 'Perfil creado exitosamente.', 'data' => $profile], 201);
     }
 
-    public function updateProfile(Request $request, $id) {
-        $validator = Validator::make($request->all(),[
-            'name' => 'string|max:255|unique:positions',
+    public function updateProfile(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => [
+                'string',
+                'max:255',
+                Rule::unique('positions')->ignore($id),
+            ],
+            'department_id' => 'integer|exists:departments,id',
+            'core_id' => 'integer|exists:cores,id',
         ]);
-        if($validator->fails()){
+        if ($validator->fails()) {
             return response()->json($validator->errors());
         }
         $updated = $this->positionService->updatePosition($id, $request->all());
@@ -53,7 +65,10 @@ class PositionController extends Controller {
         return response()->json(['message' => 'Perfil actualizado exitosamente.']);
     }
 
-    public function deleteProfile($id) {
+
+
+    public function deleteProfile($id)
+    {
         $deleted = $this->positionService->deletePosition($id);
         if (!$deleted) {
             return response()->json(['message' => 'Perfil no encontrado.'], 404);

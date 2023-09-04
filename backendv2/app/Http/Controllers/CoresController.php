@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Validation\Rule;
 use App\Models\Core;
 use App\Models\Department;
 use Illuminate\Support\Facades\Validator;
@@ -21,10 +21,10 @@ class CoresController extends Controller
     // Crear un nuevo nucleo en la base de datos
     public function createCore(Request $request)
     {
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'name' => 'string|max:255|unique:cores',
         ]);
-        if($validator->fails()){
+        if ($validator->fails()) {
             return response()->json($validator->errors());
         }
         //Creamos un nuevo objeto Cores
@@ -47,13 +47,16 @@ class CoresController extends Controller
         return response()->json(['message' => 'Nucleo creado exitosamente.', 'data' => $core], 201);
     }
 
-    // Actualizar un departamento en la base de datos
     public function updateCore(Request $request, $id)
     {
-        $validator = Validator::make($request->all(),[
-            'name' => 'string|max:255|unique:cores',
+        $validator = Validator::make($request->all(), [
+            'name' => [
+                'string',
+                'max:255',
+                Rule::unique('cores')->ignore($id),
+            ],
         ]);
-        if($validator->fails()){
+        if ($validator->fails()) {
             return response()->json($validator->errors());
         }
         //Buscamos el departmento por id

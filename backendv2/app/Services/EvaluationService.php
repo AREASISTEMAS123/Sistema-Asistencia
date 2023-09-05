@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Models\Evaluations;
+use App\Models\Evaluation;
+use App\Models\Note;
 use App\Repositories\EvaluationRepositories\EvaluationRepositoryInterface;
-use App\Models\notes;
 
 class EvaluationService {
     protected $evaluationRepository;
@@ -16,8 +16,8 @@ class EvaluationService {
     }
 
     public function getAllEvaluations() {
-        return $this->evaluationRepository->all();
-    }
+        return Evaluation::with(['user', 'evaluationType', 'note'])->get();
+      }
 
     public function createEvaluations(array $data) {
         $date = date('Y-m-d');
@@ -27,7 +27,7 @@ class EvaluationService {
 
     public function storeEvaluationNotes(array $data, $id) {
         // Buscar si ya existe una nota para la evaluación con el ID dado
-        $existingNote = notes::where('evaluation_id', $id)->first();
+        $existingNote = Note::where('evaluation_id', $id)->first();
     
         if ($existingNote) {
             // Ya existe una nota para esta evaluación, devolver un mensaje de error
@@ -35,7 +35,7 @@ class EvaluationService {
         }
     
         // Si no existe una nota, crear una nueva
-        $newNote = new notes();
+        $newNote = new Note();
         $newNote->evaluation_id = $id;
         $newNote->note = $data['note'];
         $newNote->save();

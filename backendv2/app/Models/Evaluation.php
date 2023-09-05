@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Evaluations extends Model
+class Evaluation extends Model
 {
     use HasFactory;
 
@@ -15,11 +15,13 @@ class Evaluations extends Model
         'evaluation_type'
     ];
 
-    public function user() {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+    public function evaluationType() 
+    {
+      return $this->belongsTo(EvaluationType::class);
     }
-
-    public function evaluation_type() {
-        return $this->belongsTo(Evaluation_Type::class, 'evaluation_type', 'id');
+    
+    public function notes()  
+    {
+      return $this->hasMany(Note::class); 
     }
 }

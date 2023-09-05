@@ -41,7 +41,7 @@ class JustificationController extends Controller
     $attendance = new Attendance();
     $attendance->justification_id = $justification->id;
     $attendance->status = 'falta';
-
+//realizando prueba en git bash
         return response()->json(['message' => 'Justificacion aceptada exitosamente.', 'data' => $justification], 201);
     }
 

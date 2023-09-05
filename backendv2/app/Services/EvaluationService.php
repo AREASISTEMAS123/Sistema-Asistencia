@@ -16,8 +16,9 @@ class EvaluationService {
     }
 
     public function getAllEvaluations() {
-        return Evaluation::with(['user', 'evaluationType', 'note'])->get();
-      }
+        $eva = Evaluation::with(['user', 'evaluationType', 'notes'])->get();
+        return $eva;
+    }
 
     public function createEvaluations(array $data) {
         $date = date('Y-m-d');

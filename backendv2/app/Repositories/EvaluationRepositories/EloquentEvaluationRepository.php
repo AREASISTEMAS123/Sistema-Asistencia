@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace App\Repositories\EvaluationRepositories;
 
-use App\Models\Evaluations;
+use App\Models\Evaluation;
 
 class EloquentEvaluationRepository implements EvaluationRepositoryInterface {
 
     public function all(): iterable {
-        return Evaluations::all();
+        return Evaluation::all();
     }
 
-    public function find(int $id): ?Evaluations{
-        return Evaluations::find($id);
+    public function find(int $id): ?Evaluation{
+        return Evaluation::find($id);
     }
 
-    public function create(array $data): Evaluations {
-        return Evaluations::create($data);
+    public function create(array $data): Evaluation {
+        return Evaluation::create($data);
     }
 
     public function update(int $id, array $data): bool {

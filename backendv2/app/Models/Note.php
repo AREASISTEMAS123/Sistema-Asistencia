@@ -13,6 +13,12 @@ class Note extends Model
         'note',
         'evaluations_id'
     ];
+
+    protected $hidden = [
+      'id',
+      'created_at',
+      'updated_at',
+    ];
     
     public function evaluation()
     {

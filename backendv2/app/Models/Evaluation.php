@@ -15,11 +15,19 @@ class Evaluation extends Model
         'evaluation_type'
     ];
 
-    public function evaluationType() 
-    {
-      return $this->belongsTo(EvaluationType::class);
+    protected $hidden = [
+      'created_at',
+      'updated_at',
+    ];
+
+    public function user(){
+      return $this->belongsTo(User::class);
     }
-    
+
+    public function evaluationType(){
+      return $this->belongsTo(EvaluationTypes::class, 'id');
+    }
+   
     public function notes()  
     {
       return $this->hasMany(Note::class); 

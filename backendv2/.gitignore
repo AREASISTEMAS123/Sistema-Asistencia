@@ -20,3 +20,4 @@ yarn-error.log
 /.vscode
 /public/justifications
 /public/attendances
+/public/photos

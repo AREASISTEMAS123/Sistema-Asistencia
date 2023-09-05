@@ -27,8 +27,6 @@ class BirthdayController extends Controller
         return response()->json($upcomingBirthdays, 200);
     }
 
-
-
     public function getUpcomingBirthdaysWithUsers() {
         $currentDate = now();
         $userShift = auth()->user()->shift; // Obtener el turno del usuario logeado

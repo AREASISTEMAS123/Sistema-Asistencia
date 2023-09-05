@@ -6,7 +6,8 @@ use App\Models\Department;
 use App\Models\Core;
 use App\Models\JustificationStatuses;
 use App\Models\Position;
-
+use App\Models\EvaluationTypes;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DCPSeeder extends Seeder
@@ -42,6 +43,10 @@ class DCPSeeder extends Seeder
 
         JustificationStatuses::create([
             'name' => 'Rechazado',
+        ]);
+
+        EvaluationTypes::create([
+            'name' => 'Softskills',
         ]);
         
     }

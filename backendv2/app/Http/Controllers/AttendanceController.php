@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Services\AttendanceService;
 use App\Models\Attendance;
-use App\Services\AttendanceServices;
 use Illuminate\Http\Request;
 
 class AttendanceController extends Controller
@@ -13,12 +13,12 @@ class AttendanceController extends Controller
 
     protected $attendanceService;
 
-    public function __construct(AttendanceServices $attendanceService)
+    public function __construct(AttendanceService $attendanceService)
     {
         $this->attendanceService = $attendanceService;
     }
 
-    public function index(Request $request)
+    public function getAttendances(Request $request)
     {
         $filters = $request->all(); 
         $attendances = $this->attendanceService->getFilteredAttendances($filters);

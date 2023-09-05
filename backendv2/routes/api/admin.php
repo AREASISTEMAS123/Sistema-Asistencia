@@ -34,17 +34,23 @@ Route::post('justification/accept/{id}', [App\Http\Controllers\JustificationCont
 Route::post('justification/decline/{id}', [App\Http\Controllers\JustificationController::class, 'declineJustifications']);
 
 // ---------------- USERS URL´s ---------------------- //
-Route::get('users', [App\Http\Controllers\UserController::class, 'index']);
-Route::get('users/{id}', [App\Http\Controllers\UserController::class, 'show']);
-Route::put('users/{id}/update', [App\Http\Controllers\UserController::class, 'update']);
+Route::get('users/list', [App\Http\Controllers\UserController::class, 'showProfileData']);
+Route::get('users/index', [App\Http\Controllers\UserController::class, 'index']);
+Route::get('users/index/{id}', [App\Http\Controllers\UserController::class, 'show']);
 
 // ---------------- BIRTHDAYS URL's ---------------- //
 Route::get('/birthday/details', [\App\Http\Controllers\BirthdayController::class, 'detailsbirthdayMonth']);
 Route::get('/birthday/nextBirthday', [\App\Http\Controllers\BirthdayController::class, 'getUpcomingBirthdaysWithUsers']);
 
 // ---------------- ATTENDANCES URL's --------------- //
-Route::get('attendance', [App\Http\Controllers\AttendanceController::class, 'index']);
+Route::get('attendance/list', [App\Http\Controllers\AttendanceController::class, 'getAttendances']);
 Route::post('attendance/create', [App\Http\Controllers\AttendanceController::class, 'createAttendance']);
 Route::post('attendance/id', [App\Http\Controllers\AttendanceController::class, 'show']);
+
+// ---------------- EVALUATION URL's --------------- //
+Route::get('evaluation/list', [App\Http\Controllers\EvaluationController::class, 'getEvaluations']);
+Route::post('evaluation/create', [App\Http\Controllers\EvaluationController::class, 'createEvaluation']);
+Route::post('evaluation/notes/{id}', [App\Http\Controllers\EvaluationController::class, 'storeNotes']);
+
 });
 

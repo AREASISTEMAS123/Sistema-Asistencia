@@ -18,6 +18,17 @@ class JustificationService {
         return $this->justificationRepository->all();
     }
 
+    private function uploadImage($image) {
+        // Subir imagen al servidor
+        $file = $image;
+        $folderName = date("Y-m-d"); 
+        $path = "justifications/" . $folderName; 
+        $filename = time() . "-" . $file->getClientOriginalName();
+        $file->move($path, $filename);  
+
+        return $path . "/" . $filename;
+    }
+
     public function createJustification(array $data) {
         //Por default el status == 3 (En Proceso)
         $data["status"] = 3;
@@ -27,15 +38,10 @@ class JustificationService {
         $data["user_id"] = $user_id;
 
         //Redireccion de imagen a carpeta local
-        $file = $data['evidence'];
-        $folderName = date("Y-m-d"); 
-        $path = "justifications/" . $folderName; 
-        $filename = time() . "-" . $file->getClientOriginalName();
-        $file->move($path, $filename);
+        $data['evidence'] = $this->uploadImage($data['evidence']);
 
         //Guardado de ruta en base de datos
-        $data['evidence'] = $path . "/" . $filename;
-        $data["justification_date"] = $data["justification_date"];
+        //$data["justification_date"] = $data["justification_date"];
 
         return $this->justificationRepository->create($data);
     }

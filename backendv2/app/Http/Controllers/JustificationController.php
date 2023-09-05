@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Models\Attendance;
 use App\Services\JustificationService;
 use Illuminate\Http\Request;
 
@@ -27,8 +28,20 @@ class JustificationController extends Controller
     }
 
     public function acceptJustifications($id) {
-        $justification = $this->justificationService->acceptJustification($id);
-        
+    if (!is_numeric($id) || $id <= 0) {
+        return response()->json(['error' => 'ID inválido.'], 400); 
+    }
+
+    $justification = $this->justificationService->acceptJustification($id);
+
+    if (!$justification) {
+        return response()->json(['error' => 'Justificación no encontrada.'], 404);
+    }
+
+    $attendance = new Attendance();
+    $attendance->justification_id = $justification->id;
+    $attendance->status = 'falta';
+
         return response()->json(['message' => 'Justificacion aceptada exitosamente.', 'data' => $justification], 201);
     }
 

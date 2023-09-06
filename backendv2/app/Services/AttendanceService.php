@@ -11,6 +11,8 @@ use DateTimeZone;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Models\Justification;
 
+use function PHPUnit\Framework\isNull;
+
 class AttendanceService {
     protected $attendanceRepository;
 
@@ -79,17 +81,23 @@ class AttendanceService {
                 
                 // Verificar si existe una justificación y actualizar la columna justifications
                 $type = $this->hasJustification(); 
-
-                // El usuario llegó tarde
-                if ($type == 1){
-                    $new_attendance->justification = 1;
+                if (is_null($type)) {
                     $new_attendance->delay = 1;
-                } else if ($type == 0){
-                    $new_attendance->justification = 1;
-                    $new_attendance->absence = 1;
                 } else {
+                    $new_attendance->justification = 1;
                     $new_attendance->delay = 1;
                 }
+
+                // El usuario llegó tarde
+                // if ($type == 1){
+                //     $new_attendance->justification = 1;
+                //     $new_attendance->delay = 1;
+                // } else if ($type == 0){
+                //     $new_attendance->justification = 1;
+                //     $new_attendance->absence = 1;
+                // } else {
+                //     $new_attendance->delay = 1;
+                // }
             } else {
                 // El usuario llegó temprano
                 $new_attendance->attendance = 1;

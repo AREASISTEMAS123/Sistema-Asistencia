@@ -44,6 +44,7 @@ class AttendanceService {
     }
 
     private function hasJustification() {
+        $flag = 2;
         $today = date('Y-m-d');
         $authUser = auth()->user();
         
@@ -51,7 +52,11 @@ class AttendanceService {
             ->whereDate('justification_date', $today) //Falta condicional del status != 3
             ->first('type');
         
-        return $justificationExists->type; // 0 | 1
+        if (is_null($justificationExists)){
+            return $flag;
+        } else {
+            return $justificationExists->type; // 0 | 1
+        }
     }
 
     public function store(array $data)
@@ -80,8 +85,9 @@ class AttendanceService {
             if ($this->isLateForCheckIn($new_attendance->admission_time)) {
                 
                 // Verificar si existe una justificación y actualizar la columna justifications
-                $type = $this->hasJustification(); 
-                if (is_null($type)) {
+                $type = $this->hasJustification();
+
+                if ($type == 2) {
                     $new_attendance->delay = 1;
                 } else {
                     $new_attendance->justification = 1;

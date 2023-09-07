@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Models\Attendance;
 use App\Models\Justification;
 use App\Repositories\JustificationRepositories\JustificationRepositoryInterface;
 
@@ -17,14 +18,19 @@ class JustificationService {
     public function getAllJustifications() {
         return $this->justificationRepository->all();
     }
+    public function detailsJustification($id)
+    {
+        $justification = Justification::with('User.role')->where('id', $id)->get();
+        return response()->json($justification);
+    }
 
     private function uploadImage($image) {
         // Subir imagen al servidor
         $file = $image;
-        $folderName = date("Y-m-d"); 
-        $path = "justifications/" . $folderName; 
+        $folderName = date("Y-m-d");
+        $path = "justifications/" . $folderName;
         $filename = time() . "-" . $file->getClientOriginalName();
-        $file->move($path, $filename);  
+        $file->move($path, $filename);
 
         return $path . "/" . $filename;
     }
@@ -48,20 +54,60 @@ class JustificationService {
 
     public function acceptJustification($id) {
         $justification = Justification::find($id);
+        $date = $justification->justification_date;
+        $user = $justification->user_id;
 
-        if ($justification) {
-            if ($justification->status == 1 || $justification->status == 2) {
-                return response()->json(['message' => 'Esta justificacion ya ha sido aceptada o declinada'], 201);
-            } else {
-                $justification->status = 1;
+        $att = Attendance::where('user_id',$user)->where('date',$date)->exists();
 
-                //Attendance::create [
+        if ( $att == 'true'){
 
-                //]
+            $att = Attendance::where('user_id', $user)->where('date',$date)->firstOrFail();
+            if ($att->user_id == $user && $att->date = $date){
 
-                $justification->save();
-                return $justification;
+                if($justification->justification_type == '0'){
+                    $att->update([
+                        'attendance' =>'0',
+                        'absence' => '1',
+                        'justification' => '1',
+                    ]);
+                    $justification->update(['justification_status' => '1']);
+
+                    return response()->json([ "message" => "Justificacion acceptado con exito"]);
+                }else{
+                    $att->update([
+                        'justification' => '1',
+                    ]);
+                    $justification->update(['justification_status' => '1']);
+
+                    return response()->json([ "message" => "Justificacion acceptado con exito"]);
+                }
+
             }
+
+        } else{
+
+            if($justification->justification_type == '0'){
+                $attendance = Attendance::create([
+                    'user_id' => $user,
+                    'absence' => '1',
+                    'justification' => '1',
+                    'date' => $justification->justification_date
+                ]);
+                $justification->update(['justification_status' => '1']);
+
+                return response()->json([ "message" => "Justificacion acceptado con exito"]);
+            }else{
+                $attendance = Attendance::create([
+                    'user_id' => $user,
+                    'delay' => '1',
+                    'justification' => '1',
+                    'date' => $justification->justification_date
+                ]);
+                $justification->update(['justification_status' => '1',]);
+
+                return response()->json([ "message" => "Justificacion acceptado con exito"]);
+            }
+
         }
     }
 

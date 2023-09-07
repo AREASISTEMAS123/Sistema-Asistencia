@@ -21,6 +21,8 @@ class JustificationController extends Controller
         return response()->json($justifications);
     }
 
+
+
     public function createJustifications(Request $request) {
         $justification = $this->justificationService->createJustification($request->all());
         return response()->json(['message' => 'Justificacion creada exitosamente.', 'data' => $justification], 201);

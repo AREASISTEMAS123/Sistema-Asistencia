@@ -34,16 +34,16 @@ class DCPSeeder extends Seeder
         ]);
 
         JustificationStatuses::create([
-            'name' => 'En Proceso',
-        ]);
-
-        JustificationStatuses::create([
             'name' => 'Aceptado',
         ]);
 
         JustificationStatuses::create([
             'name' => 'Rechazado',
         ]);
+
+        JustificationStatuses::create([
+            'name' => 'En Proceso',
+        ]); 
 
         EvaluationTypes::create([
             'name' => 'Softskills',

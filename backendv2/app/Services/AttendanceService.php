@@ -11,8 +11,6 @@ use DateTimeZone;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Models\Justification;
 
-use function PHPUnit\Framework\isNull;
-
 class AttendanceService {
     protected $attendanceRepository;
 
@@ -60,74 +58,49 @@ class AttendanceService {
     }
 
     public function store(array $data)
-    {   
-        // Establecer la zona horaria a America/Lima
-        date_default_timezone_set('America/Lima');
-
-        // Obtener usuario autenticado
+    {
         $authUser = auth()->user();
-    
-        // Obtener el registro de asistencia del usuario para la fecha actual
-        $attendance_find = Attendance::where('user_id', $authUser->id)
-            ->whereDate('date', date('Y-m-d'))
-            ->first(); 
-    
-        if (empty($attendance_find)) {
-            // Creamos el registro de asistencia
-            $new_attendance = new Attendance;
-    
-            $new_attendance->user_id = $authUser->id;
-    
-            $new_attendance->date = date('Y-m-d');
-            $new_attendance->admission_time = date('H:i');
-
-            // Verificar si llegó tarde al check-in
-            if ($this->isLateForCheckIn($new_attendance->admission_time)) {
-                
-                // Verificar si existe una justificación y actualizar la columna justifications
-                $type = $this->hasJustification();
-
-                if ($type == 2) {
-                    $new_attendance->delay = 1;
-                } else {
-                    $new_attendance->justification = 1;
-                    $new_attendance->delay = 1;
-                }
-
-                // El usuario llegó tarde
-                // if ($type == 1){
-                //     $new_attendance->justification = 1;
-                //     $new_attendance->delay = 1;
-                // } else if ($type == 0){
-                //     $new_attendance->justification = 1;
-                //     $new_attendance->absence = 1;
-                // } else {
-                //     $new_attendance->delay = 1;
-                // }
-            } else {
-                // El usuario llegó temprano
-                $new_attendance->attendance = 1;
-            }
-
-            $path = $this->uploadImage($data['admission_image']);
-
-            //Actualizacion de ruta de la imagen de salida
-            $new_attendance->admission_image = $path;
-    
-            $new_attendance->save();
-            return $new_attendance;
-
+        $currentTime = now();
+        
+        $attendance = Attendance::where('user_id', $authUser->id)
+            ->whereDate('date', $currentTime->toDateString())
+            ->firstOrNew();
+        
+        if ($attendance->attendance == 0 && $attendance->delay == 0) {
+            $this->updateCheckIn($attendance, $currentTime, $data['admission_image']);
         } else {
-            // Actualizamos el registro de asistencia existente
-            $attendance_find->departure_time = date('H:i');
-
-            $path = $this->uploadImage($data['departure_image']);
-
-            //Actualizacion de ruta de la imagen de salida
-            $attendance_find->departure_image = $path;  
-
-            $attendance_find->save();
-            return $attendance_find;
+            $this->updateCheckOut($attendance, $currentTime, $data['departure_image']);
         }
+    
+        return $attendance;
     }
+    
+    protected function updateCheckIn($attendance, $currentTime, $imagePath)
+    {
+        $attendance->admission_time = $currentTime->format('H:i');
+        $attendance->admission_image = $this->uploadImage($imagePath);
+    
+        if ($this->isLateForCheckIn($attendance->admission_time)) {
+            $type = $this->hasJustification();
+    
+            if ($type == 2) {
+                $attendance->delay = 1;
+            } else {
+                $attendance->justification = 1;
+                $attendance->delay = 1;
+            }
+        } else {
+            $attendance->attendance = 1;
+        }
+    
+        $attendance->save();
+    }
+    
+    protected function updateCheckOut($attendance, $currentTime, $imagePath)
+    {
+        $attendance->departure_time = $currentTime->format('H:i');
+        $attendance->departure_image = $this->uploadImage($imagePath);
+        $attendance->save();
+    }
+    
 }

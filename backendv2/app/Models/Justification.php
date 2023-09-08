@@ -16,6 +16,7 @@ class Justification extends Model
         'type',
         'status',
         'user_id',
+        'action_by',
     ];
 
     protected $hidden = [
@@ -31,5 +32,8 @@ class Justification extends Model
     public function status()
     {
         return $this->belongsTo(JustificationStatuses::class, 'status', 'id');
+    }
+    public function actionByUser(){
+        return $this->belongsTo(User::class, 'action_by');
     }
 }

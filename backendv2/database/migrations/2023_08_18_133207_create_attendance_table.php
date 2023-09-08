@@ -20,10 +20,8 @@ return new class extends Migration
             $table->string('admission_image')->nullable();
             $table->string('departure_image')->nullable();
             $table->boolean('attendance')->default(0);
-            $table->boolean('absence')->default(0);
             $table->boolean('justification')->default(0);
             $table->boolean('delay')->default(0);
-            $table->boolean('non_working_days')->default(0);
             $table->date('date')->nullable();
 
             $table->unsignedBigInteger('user_id')->nullable();

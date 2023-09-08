@@ -26,18 +26,17 @@ Route::put('position/update/{id}', [App\Http\Controllers\PositionController::cla
 Route::delete('position/delete/{id}', [App\Http\Controllers\PositionController::class, 'deleteProfile']);
 
 // ---------------- JUSTIFICATIONS URL's ---------------- //
-Route::get('justification/list', [App\Http\Controllers\JustificationController::class, 'getJustifications']);
+Route::get('justification', [App\Http\Controllers\JustificationController::class, 'getJustifications']);
 Route::post('justification/create', [App\Http\Controllers\JustificationController::class, 'createJustifications']);
-Route::delete('justification/delete/{id}', [App\Http\Controllers\JustificationController::class, '']);
-
 
 Route::post('justification/accept/{id}', [App\Http\Controllers\JustificationController::class, 'acceptJustifications']);
 Route::post('justification/decline/{id}', [App\Http\Controllers\JustificationController::class, 'declineJustifications']);
 
 // ---------------- USERS URL´s ---------------------- //
-Route::get('users/list', [App\Http\Controllers\UserController::class, 'showProfileData']);
-Route::get('users/index', [App\Http\Controllers\UserController::class, 'index']);
-Route::get('users/index/{id}', [App\Http\Controllers\UserController::class, 'show']);
+
+Route::get('users', [App\Http\Controllers\UserController::class, 'index']);
+Route::get('users/{id}', [App\Http\Controllers\UserController::class, 'show']);
+Route::get('users/{id}/update', [App\Http\Controllers\UserController::class, 'update']);
 
 // ---------------- BIRTHDAYS URL's ---------------- //
 Route::get('/birthday/details', [\App\Http\Controllers\BirthdayController::class, 'detailsbirthdayMonth']);

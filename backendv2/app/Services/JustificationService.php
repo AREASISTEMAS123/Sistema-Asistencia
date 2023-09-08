@@ -7,6 +7,8 @@ namespace App\Services;
 use App\Models\Attendance;
 use App\Models\Justification;
 use App\Repositories\JustificationRepositories\JustificationRepositoryInterface;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class JustificationService {
     protected $justificationRepository;
@@ -15,14 +17,61 @@ class JustificationService {
         $this->justificationRepository = $justificationRepository;
     }
 
-    public function getAllJustifications() {
-        return $this->justificationRepository->all();
-    }
-    public function detailsJustification($id)
+    public function getJustifications(array $filters)
     {
-        $justification = Justification::with('User.role')->where('id', $id)->get();
-        return response()->json($justification);
+        $query = Justification::with('User.position.core.department', 'actionByUser:id,name,surname');
+
+        if (isset($filters['status'])) {
+            $query->where('status', $filters['status']);
+        }
+
+        if (isset($filters['user'])) {
+            $query->where('user_id', Auth::user()->id);
+        }
+
+        if (isset($filters['shift'])) {
+            $query->whereHas('User.position', function ($q) use ($filters) {
+                $q->where('shift', $filters['shift']);
+            });
+        }
+
+        if (isset($filters['id'])) {
+            $justification = $query->find($filters['id']);
+            return  $justification;
+        }
+
+        // Filtrar por nombre o apellido si se proporciona
+        if (isset($filters['name'])) {
+            $query->whereHas('User', function ($q) use ($filters) {
+                $q->where('name', 'LIKE', '%' . $filters['name'] . '%')
+                    ->orWhere('surname', 'LIKE', '%' . $filters['name'] . '%');
+            });
+        }
+
+        $query->orderBy('created_at', 'desc');
+
+        $declines = Justification::where('status', '2')->count();
+        $process = Justification::where('status', '3')->count();
+        $accept = Justification::where('status', '1')->count();
+        $absence = Justification::where('type', '0')->count();
+        $delay = Justification::where('type', '1')->count();
+
+        $justifications = $query->paginate(6);
+
+        // Agregar la propiedad image_url a cada usuario en las justificaciones
+        $justifications->getCollection()->transform(function ($justification) {
+            $justification->user->image_url = $justification->user->getImageUrlAttribute();
+            return $justification;
+        });
+
+        return ['Justifications' => $justifications,
+            'rechazados' => $declines,
+            'proceso' => $process,
+            'aceptados' => $accept,
+            'faltas' => $absence,
+            'delay' => $delay];
     }
+
 
     private function uploadImage($image) {
         // Subir imagen al servidor
@@ -52,75 +101,63 @@ class JustificationService {
         return $this->justificationRepository->create($data);
     }
 
+
     public function acceptJustification($id) {
+        $actionByUserId = auth()->id();
         $justification = Justification::find($id);
+
+        if (!$justification) {
+            // Aquí puedes manejar la lógica para cuando la justificación no se encuentra
+            return "Justificación no encontrada";
+        }
+
         $date = $justification->justification_date;
         $user = $justification->user_id;
 
-        $att = Attendance::where('user_id',$user)->where('date',$date)->exists();
+        // Verificar si ya existe un registro de asistencia
+        $attendance = Attendance::where('user_id', $user)->where('date', $date)->first();
 
-        if ( $att == 'true'){
+        if ($attendance) {
+            if ($justification->type == '0') {
+                $attendance->update(['attendance' => '0', 'justification' => '1']);
+            } else {
+                $attendance->update(['justification' => '1']);
+            }
+        } else {
+            $attendanceData = [
+                'user_id' => $user,
+                'date' => $date,
+                'justification' => '1',
+            ];
 
-            $att = Attendance::where('user_id', $user)->where('date',$date)->firstOrFail();
-            if ($att->user_id == $user && $att->date = $date){
-
-                if($justification->justification_type == '0'){
-                    $att->update([
-                        'attendance' =>'0',
-                        'absence' => '1',
-                        'justification' => '1',
-                    ]);
-                    $justification->update(['justification_status' => '1']);
-
-                    return response()->json([ "message" => "Justificacion acceptado con exito"]);
-                }else{
-                    $att->update([
-                        'justification' => '1',
-                    ]);
-                    $justification->update(['justification_status' => '1']);
-
-                    return response()->json([ "message" => "Justificacion acceptado con exito"]);
-                }
-
+            if ($justification->type == '0') {
+                $attendanceData['attendance'] = '0';
+            } else {
+                $attendanceData['delay'] = '1';
             }
 
-        } else{
-
-            if($justification->justification_type == '0'){
-                $attendance = Attendance::create([
-                    'user_id' => $user,
-                    'absence' => '1',
-                    'justification' => '1',
-                    'date' => $justification->justification_date
-                ]);
-                $justification->update(['justification_status' => '1']);
-
-                return response()->json([ "message" => "Justificacion acceptado con exito"]);
-            }else{
-                $attendance = Attendance::create([
-                    'user_id' => $user,
-                    'delay' => '1',
-                    'justification' => '1',
-                    'date' => $justification->justification_date
-                ]);
-                $justification->update(['justification_status' => '1',]);
-
-                return response()->json([ "message" => "Justificacion acceptado con exito"]);
-            }
-
+            Attendance::create($attendanceData);
         }
+
+        $justification->update(['status' => '1', 'action_by' => $actionByUserId]);
+
+        return "Justificación aceptada con éxito";
     }
 
-    public function declineJustification($id) {
+    public function declineJustification(Request $request, $id) {
+        $actionByUserId = auth()->id();
         $justification = Justification::find($id);
 
         if ($justification) {
             if ($justification->status == 2 || $justification->status == 1) {
-                return response()->json(['message' => 'Esta justificacion ya ha sido declinada o aceptada'], 201);
+                return 'Esta justificacion ya ha sido declinada o aceptada';
             } else {
-                $justification->status = 2;
-                $justification->save();
-                return $justification;
+                $justification->update([
+                    'status' => '2',
+                    'reason_decline' => $request->reason_decline,
+                    'action_by' => $actionByUserId
+                ]);
+                return "La Justificacion ha sido rechazada";
             }
         }
     }

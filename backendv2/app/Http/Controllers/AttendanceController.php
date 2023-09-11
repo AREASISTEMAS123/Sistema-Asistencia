@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Services\AttendanceService;
 use App\Models\Attendance;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AttendanceController extends Controller
 {
@@ -43,13 +44,8 @@ class AttendanceController extends Controller
         return response()->json(['attendance' => $attendance]);
     }
 
-    public function update(Request $request, $id)
+    public function callDatabaseProcedure()
     {
-        //
-    }
-
-    public function destroy($id)
-    {
-        //
+        DB::statement('select llenar_attendances_user_id();');
     }
 }

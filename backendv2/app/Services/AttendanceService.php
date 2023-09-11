@@ -60,28 +60,29 @@ class AttendanceService {
 
     public function store(array $data)
     {
-        $authUser = auth()->user();
+        $authUser = auth()->id();
         $currentTime = now();
-        $date = Carbon::now()->format('Y-m-d');
-
-        $attendance = Attendance::where('user_id', $authUser->id)
+        
+        $attendance = Attendance::where('user_id', $authUser)
             ->whereDate('date', $currentTime->toDateString())
             ->firstOrNew();
 
         if ($attendance->attendance == 0 && $attendance->delay == 0) {
-            $this->updateCheckIn($attendance, $currentTime, $data['admission_image'], $authUser->id, $date);
+            $this->updateCheckIn($attendance, $currentTime, $data['admission_image'], $authUser);
         } else {
             $this->updateCheckOut($attendance, $currentTime, $data['departure_image']);
         }
 
         return $attendance;
     }
-
-    protected function updateCheckIn($attendance, $currentTime, $imagePath, $authUser, $date)
+    
+    protected function updateCheckIn($attendance, $currentTime, $imagePath, $authUser)
     {
         $attendance->admission_time = $currentTime->format('H:i');
         $attendance->admission_image = $this->uploadImage($imagePath);
-
+        $attendance->user_id = $authUser;
+        $attendance->date = $currentTime->format('Y-m-d');
+    
         if ($this->isLateForCheckIn($attendance->admission_time)) {
             $type = $this->hasJustification();
 
@@ -91,11 +92,11 @@ class AttendanceService {
                 $attendance->justification = 1;
                 $attendance->delay = 1;
             }
+            
         } else {
             $attendance->attendance = 1;
         }
-        $attendance->user_id = $authUser;
-        $attendance->date = $date;
+
         $attendance->save();
     }
 

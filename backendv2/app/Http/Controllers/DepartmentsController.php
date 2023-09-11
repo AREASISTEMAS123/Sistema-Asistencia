@@ -45,9 +45,12 @@ class DepartmentsController extends Controller
         $validator = Validator::make($request->all(),[
             'name' => 'string|max:255|unique:departments',
         ]);
+
         if($validator->fails()){
+            print("Error updating department");
             return response()->json($validator->errors());
         }
+
         //Buscamos el departmento por id
         $department = Department::find($id);
 

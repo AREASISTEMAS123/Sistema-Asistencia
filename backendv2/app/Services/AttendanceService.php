@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Models\Attendance;
 use App\Repositories\AttendanceRepositories\AttendanceRepositoryInterface;
+use Carbon\Carbon;
 use DateTime;
 use DateTimeZone;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -26,17 +27,17 @@ class AttendanceService {
     private function isLateForCheckIn($checkInTime) {
         $checkInLimit = new DateTime('08:11', new DateTimeZone('America/Lima'));
         $checkInTime = new DateTime($checkInTime, new DateTimeZone('America/Lima'));
-    
+
         return $checkInTime > $checkInLimit;
     }
-      
+
     private function uploadImage($image) {
         // Subir imagen al servidor
         $file = $image;
-        $folderName = date("Y-m-d"); 
-        $path = "attendances/" . $folderName; 
+        $folderName = date("Y-m-d");
+        $path = "attendances/" . $folderName;
         $filename = time() . "-" . $file->getClientOriginalName();
-        $file->move($path, $filename);  
+        $file->move($path, $filename);
 
         return $path . "/" . $filename;
     }
@@ -45,11 +46,11 @@ class AttendanceService {
         $flag = 2;
         $today = date('Y-m-d');
         $authUser = auth()->user();
-        
+
         $justificationExists = Justification::where('user_id', $authUser->id)
             ->whereDate('justification_date', $today) //Falta condicional del status != 3
             ->first('type');
-        
+
         if (is_null($justificationExists)){
             return $flag;
         } else {
@@ -65,13 +66,13 @@ class AttendanceService {
         $attendance = Attendance::where('user_id', $authUser)
             ->whereDate('date', $currentTime->toDateString())
             ->firstOrNew();
-        
+
         if ($attendance->attendance == 0 && $attendance->delay == 0) {
             $this->updateCheckIn($attendance, $currentTime, $data['admission_image'], $authUser);
         } else {
             $this->updateCheckOut($attendance, $currentTime, $data['departure_image']);
         }
-    
+
         return $attendance;
     }
     
@@ -84,7 +85,7 @@ class AttendanceService {
     
         if ($this->isLateForCheckIn($attendance->admission_time)) {
             $type = $this->hasJustification();
-    
+
             if ($type == 2) {
                 $attendance->delay = 1;
             } else {
@@ -95,15 +96,15 @@ class AttendanceService {
         } else {
             $attendance->attendance = 1;
         }
-    
+
         $attendance->save();
     }
-    
+
     protected function updateCheckOut($attendance, $currentTime, $imagePath)
     {
         $attendance->departure_time = $currentTime->format('H:i');
         $attendance->departure_image = $this->uploadImage($imagePath);
         $attendance->save();
     }
-    
+
 }

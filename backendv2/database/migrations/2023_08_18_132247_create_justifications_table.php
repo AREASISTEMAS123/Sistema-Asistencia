@@ -19,13 +19,15 @@ return new class extends Migration
             $table->string('reason');
             $table->string('evidence');
             $table->boolean('type');
-            
+
             $table->unsignedBigInteger('status');
             $table->foreign('status')->references('id')->on('justification_statuses')->onDelete('cascade');
-    
+
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-
+            $table->string('reason_decline')->nullable();
+            $table->unsignedBigInteger('action_by')->nullable();
+            $table->foreign('action_by')->references('id')->on('users')->onDelete('set null');
             $table->timestamps();
         });
     }

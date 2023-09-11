@@ -24,6 +24,11 @@ class BirthdayController extends Controller
 
         $upcomingBirthdays = $query->orderByRaw('DAY(birthday)')->get();
 
+        // Agregar la URL de la imagen a cada usuario
+        foreach ($upcomingBirthdays as $user) {
+            $user->image_url = $user->getImageUrlAttribute();
+        }
+
         return response()->json($upcomingBirthdays, 200);
     }
 
@@ -36,6 +41,10 @@ class BirthdayController extends Controller
             ->where('shift', $userShift) // Filtrar por turno
             ->orderByRaw('DAY(birthday)')
             ->get();
+        // Agregar la URL de la imagen a cada usuario
+        foreach ($upcomingBirthdays as $user) {
+            $user->image_url = $user->getImageUrlAttribute();
+        }
 
         return response()->json($upcomingBirthdays, 200);
     }

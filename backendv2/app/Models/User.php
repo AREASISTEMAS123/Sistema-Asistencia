@@ -48,6 +48,11 @@ class User extends Authenticatable
         return $baseUrl . $imageName;
     }
 
+    public function getStatusAttribute($value)
+    {
+        return $value ? 1 : 0;
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

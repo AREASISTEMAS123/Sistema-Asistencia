@@ -27,6 +27,22 @@ class Attendance extends Model
         'created_at',
         'updated_at',
     ];
+    public function getAttendanceAttribute($value)
+    {
+        return $value ? 1 : 0;
+    }
+
+    // Mutador para el campo 'justification'
+    public function getJustificationAttribute($value)
+    {
+        return $value ? 1 : 0;
+    }
+
+    // Mutador para el campo 'delay'
+    public function getDelayAttribute($value)
+    {
+        return $value ? 1 : 0;
+    }
 
     public function user()
     {

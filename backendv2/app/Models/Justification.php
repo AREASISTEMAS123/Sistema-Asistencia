@@ -23,6 +23,10 @@ class Justification extends Model
         'created_at',
         'updated_at',
     ];
+    public function getTypeAttribute($value)
+    {
+        return $value ? 1 : 0;
+    }
 
     public function user()
     {

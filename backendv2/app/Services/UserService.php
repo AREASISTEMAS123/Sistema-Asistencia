@@ -71,7 +71,7 @@ class UserService
         ];
     }
 
-    public function update($user, array $data): User
+    public function update($user, array $data): \Illuminate\Http\JsonResponse
     {
         $user = User::find($user);
         if (isset($data['dni'])) {
@@ -104,7 +104,7 @@ class UserService
         }
         $user->update($data);
 
-        return $user;
+        return response()->json($user);
 
     }
 }

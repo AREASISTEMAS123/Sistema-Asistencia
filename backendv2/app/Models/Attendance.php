@@ -50,7 +50,7 @@ class Attendance extends Model
     }
 
     public function scopeFilter(Builder $query, array $filters) {
-        $query = Attendance::query()->with('user.roles');
+        $query = Attendance::query()->with('user.roles','user.position.core.department');
         if (!empty($filters['date'])) {
             $carbon = new \Carbon\Carbon;
             $date = $carbon->parse($filters['date'])->format('Y-m-d');

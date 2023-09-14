@@ -74,6 +74,7 @@ class UserService
     public function update($user, array $data): \Illuminate\Http\JsonResponse
     {
         $user = User::find($user);
+
         if (isset($data['dni'])) {
             $data['password'] = Hash::make($data['dni']);
             $data['username'] = $data['dni'];
@@ -86,25 +87,33 @@ class UserService
             }
         }
 
-        if (isset($data['image'])) {
-            $archivo = $data['image'];
+        if (array_key_exists('image', $data)) {
+            $imageData = $data['image'];
 
-            $ruta = 'photos/' . $user->id; // Ruta con el ID del usuario
-            $nombreArchivo = $archivo->getClientOriginalName();
-            $archivo->move($ruta, $nombreArchivo);
+            if ($imageData instanceof \Illuminate\Http\UploadedFile) {
+                // Manejar el caso en que $imageData es un archivo
+                $ruta = 'photos/' . $user->id; // Ruta con el ID del usuario
+                $nombreArchivo = $imageData->getClientOriginalName();
+                $imageData->move($ruta, $nombreArchivo);
 
-            if ($user->image && $user->image !== $nombreArchivo) {
-                $ruta_anterior = public_path('photos/' . $user->id . '/' . $user->image);
-                if (file_exists($ruta_anterior)) {
-                    unlink($ruta_anterior); // Eliminar la imagen anterior
+                if ($user->image && $user->image !== $nombreArchivo) {
+                    $ruta_anterior = public_path('photos/' . $user->id . '/' . $user->image);
+                    if (file_exists($ruta_anterior)) {
+                        unlink($ruta_anterior); // Eliminar la imagen anterior
+                    }
                 }
-            }
 
-            $data['image'] = $nombreArchivo;
+                $data['image'] = $nombreArchivo;
+            } else {
+                // Manejar el caso en que $imageData es una cadena
+                // Por ejemplo, guardar $imageData en un campo de texto en la base de datos
+                $data['image'] = $imageData;
+            }
         }
+
         $user->update($data);
 
         return response()->json($user);
-
     }
+
 }

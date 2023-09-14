@@ -37,7 +37,7 @@ class UserController extends Controller
         return response()->json($userData);
     }
 
-    public function update(UpdateUserRequest $request, $user): JsonResponse
+    public function update(UpdateUserRequest $request, $user)
     {
         try {
             $user = $this->userService->update($user, $request->validated());

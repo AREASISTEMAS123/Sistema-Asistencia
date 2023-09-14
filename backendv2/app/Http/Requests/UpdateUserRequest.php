@@ -25,20 +25,20 @@ class UpdateUserRequest extends FormRequest
     {
         return [
             'username' => 'string|max:191',
-            'name' => 'required|string|max:191',
-            'surname' => 'required|string|max:191',
-            'email' => 'required|string|email|max:191',
+            'name' => 'string|max:191',
+            'surname' => 'string|max:191',
+            'email' => 'string|email|max:191',
             'password' => 'string|min:8',
             'status' => 'bool',
             'status_description'=>'',
-            'dni' => 'required|string|max:20',
-            'position_id' => 'required|int|max:191',
-            'cellphone' => 'required|string|max:11',
-            'shift' => 'required|string|max:191',
-            'birthday' => 'required|date|max:191',
+            'dni' => 'string|max:20',
+            'position_id' => 'int|max:191',
+            'cellphone' => 'string|max:11',
+            'shift' => 'string|max:191',
+            'birthday' => 'date|max:191',
             'image' => '',
-            'date_start' => 'required|date|max:191',
-            'date_end' => 'required|date|max:191',
+            'date_start' => 'date|max:191',
+            'date_end' => 'date|max:191',
             'role_id' =>'string'
         ];
     }

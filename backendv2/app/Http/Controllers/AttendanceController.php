@@ -7,6 +7,8 @@ namespace App\Http\Controllers;
 use App\Services\AttendanceService;
 use App\Models\Attendance;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AttendanceController extends Controller
 {
@@ -20,9 +22,18 @@ class AttendanceController extends Controller
 
     public function getAttendances(Request $request)
     {
-        $filters = $request->all(); 
-        $attendances = $this->attendanceService->getFilteredAttendances($filters);
-        return response()->json($attendances);
+            $user = Auth::user();
+            $userShift = $user->shift;
+            $position = $user->position->first();
+            $userCore = $position ? $position->core->id : null;
+
+            $filters = $request->all();
+            $currentDate = now()->format('Y-m-d');
+
+
+            $attendances = $this->attendanceService->getFilteredAttendances($filters, $userShift, $userCore, $currentDate);
+
+            return response()->json($attendances);
     }
 
     public function createAttendance(Request $request)
@@ -43,13 +54,8 @@ class AttendanceController extends Controller
         return response()->json(['attendance' => $attendance]);
     }
 
-    public function update(Request $request, $id)
+    public function callDatabaseProcedure()
     {
-        //
-    }
-
-    public function destroy($id)
-    {
-        //
+        DB::statement('select llenar_attendances_user_id();');
     }
 }

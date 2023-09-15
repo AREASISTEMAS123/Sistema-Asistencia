@@ -10,12 +10,16 @@ use Spatie\Permission\Models\Role;
 
 class UserService
 {
-    public function getFilteredUsers(array $filters): LengthAwarePaginator
+    public function getFilteredUsers(array $filters, $userShift): LengthAwarePaginator
     {
         $query = User::query()->with('position.core.department', 'roles');
 
         if (!empty($filters['shift'])) {
             $query->whereHas('position', fn ($q) => $q->where('shift', $filters['shift']));
+        } elseif (!empty($userShift)) {
+            // Si no se especifica un filtro de turno, pero tenemos el turno del usuario logueado,
+            // lo utilizamos para ordenar por defecto y para filtrar.
+            $query->whereHas('position', fn ($q) => $q->where('shift', $userShift));
         }
         if (!empty($filters['position'])) {
             $query->whereHas('position', fn ($q) => $q->where('id', $filters['position']));

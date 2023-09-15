@@ -12,6 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Services\UserService;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -24,7 +25,8 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        $users = $this->userService->getFilteredUsers($request->all());
+        $userShift = Auth::user()->shift;
+        $users = $this->userService->getFilteredUsers($request->all(), $userShift);
         return response()->json($users);
     }
 

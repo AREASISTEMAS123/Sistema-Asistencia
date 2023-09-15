@@ -19,9 +19,9 @@ class AttendanceService {
         $this->attendanceRepository = $attendanceRepository;
     }
 
-    public function getFilteredAttendances(array $filters): LengthAwarePaginator
+    public function getFilteredAttendances(array $filters, $userShift = null, $userCore = null, $currentDate = null): LengthAwarePaginator
     {
-        return Attendance::filter($filters)->paginate(10);
+        return Attendance::filter($filters, $userShift, $userCore, $currentDate)->paginate(10);
     }
 
     private function isLateForCheckIn($checkInTime) {
@@ -62,7 +62,7 @@ class AttendanceService {
     {
         $authUser = auth()->id();
         $currentTime = now();
-        
+
         $attendance = Attendance::where('user_id', $authUser)
             ->whereDate('date', $currentTime->toDateString())
             ->firstOrNew();
@@ -75,14 +75,14 @@ class AttendanceService {
 
         return $attendance;
     }
-    
+
     protected function updateCheckIn($attendance, $currentTime, $imagePath, $authUser)
     {
         $attendance->admission_time = $currentTime->format('H:i');
         $attendance->admission_image = $this->uploadImage($imagePath);
         $attendance->user_id = $authUser;
         $attendance->date = $currentTime->format('Y-m-d');
-    
+
         if ($this->isLateForCheckIn($attendance->admission_time)) {
             $type = $this->hasJustification();
 
@@ -92,7 +92,7 @@ class AttendanceService {
                 $attendance->justification = 1;
                 $attendance->delay = 1;
             }
-            
+
         } else {
             $attendance->attendance = 1;
         }

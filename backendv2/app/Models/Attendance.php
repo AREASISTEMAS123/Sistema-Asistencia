@@ -49,38 +49,34 @@ class Attendance extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function scopeFilter(Builder $query, array $filters) {
-        $query = Attendance::query()->with('user.roles','user.position.core.department');
-        if (!empty($filters['date'])) {
-            $carbon = new \Carbon\Carbon;
-            $date = $carbon->parse($filters['date'])->format('Y-m-d');
-            $query->whereDate('date', $date);
+    public function scopeFilter(Builder $query, array $filters, $userShift = null, $userCore = null, $currentDate = null)
+    {
+        $query->with('user.roles', 'user.position.core.department');
+
+        // Filtrar por fecha actual si no se proporciona una fecha
+        $date = !empty($filters['date']) ? $filters['date'] : $currentDate;
+        if (!empty($date)) {
+            $query->whereDate('date', '=', $date);
         }
 
-        if(!empty($filters['position'])) {
-            $query->whereHas('user.position', fn($q) =>
-               $q->where('id', $filters['position'])
-            );
-          }
-
-        if(!empty($filters['core'])) {
-            $query->whereHas('user.position.core', fn($q) =>
-                $q->where('id', $filters['core'])
-            );
+        // Filtrar por núcleo
+        if (!empty($filters['core']) || !empty($userCore)) {
+            $coreId = !empty($filters['core']) ? $filters['core'] : $userCore;
+            $query->whereHas('user.position.core', fn($q) => $q->where('id', $coreId));
         }
 
-        if(!empty($filters['department'])) {
-            $query->whereHas('user.position.core.department', fn($q) =>
-                $q->where('id', $filters['department'])
-            );
+        // Filtrar por departamento
+        if (!empty($filters['department'])) {
+            $query->whereHas('user.position.core.department', fn($q) => $q->where('id', $filters['department']));
         }
 
-        if (!empty($filters['shift'])) {
-            $query->whereHas('user.position', fn($q) =>
-                $q->where('shift', $filters['shift'])
-            );
+        // Filtrar por turno
+        if (!empty($filters['shift']) || !empty($userShift)) {
+            $shift = !empty($filters['shift']) ? $filters['shift'] : $userShift;
+            $query->whereHas('user.position', fn($q) => $q->where('shift', $shift));
         }
 
         return $query;
     }
+
 }

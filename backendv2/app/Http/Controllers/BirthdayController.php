@@ -22,7 +22,7 @@ class BirthdayController extends Controller
             $query->whereDay('birthday', $day);
         }
 
-        $upcomingBirthdays = $query->orderByRaw('DAY(birthday)')->get(); // 'EXTRACT(DAY FROM birthday)'
+        $upcomingBirthdays = $query->orderByRaw('EXTRACT(DAY FROM birthday)')->get(); // 'EXTRACT(DAY FROM birthday)'
 
         // Agregar la URL de la imagen a cada usuario
         foreach ($upcomingBirthdays as $user) {
@@ -39,7 +39,7 @@ class BirthdayController extends Controller
         $upcomingBirthdays = User::whereMonth('birthday', $currentDate->month)->with('position.core.department')
             ->whereDay('birthday', '>=', $currentDate->day)
             ->where('shift', $userShift) // Filtrar por turno
-            ->orderByRaw('DAY(birthday)') // 'EXTRACT(DAY FROM birthday)'
+            ->orderByRaw('EXTRACT(DAY FROM birthday)') // 'EXTRACT(DAY FROM birthday)'
             ->get();
         // Agregar la URL de la imagen a cada usuario
         foreach ($upcomingBirthdays as $user) {

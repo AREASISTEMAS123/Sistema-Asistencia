@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Models\Justification;
 use App\Services\JustificationService;
 use Illuminate\Http\Request;
 
@@ -17,7 +18,16 @@ class JustificationController extends Controller
     }
 
     public function getJustifications(Request $request) {
-        $justifications = $this->justificationService->getJustifications($request->all());
+        $query = $request->input('user');
+        
+        if ($query == ''){
+            // Filtrado por default
+            $justifications = Justification::get();
+        } else {
+            // Utiliza el valor 'query' para filtrar las justificaciones
+            $justifications = Justification::where('user_id', '!=', $query)->get();
+        }
+
         return response()->json($justifications);
     }
 

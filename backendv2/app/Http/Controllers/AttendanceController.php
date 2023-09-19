@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\DB;
 
 class AttendanceController extends Controller
 {
-
     protected $attendanceService;
 
     public function __construct(AttendanceService $attendanceService)

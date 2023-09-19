@@ -46,10 +46,10 @@ class AttendanceController extends Controller
     {
         //Recogemos el ID del usuario logeado
         $user_id = auth()->id();
-        $date = Carbon::now();
+        $currentDate = now()->format('Y-m-d');
 
         // Obtener el registro de asistencia del usuario para el usuario actualmente logeado
-        $attendance = Attendance::where('user_id', $user_id)->where('date', $date)->first();
+        $attendance = Attendance::where('user_id', $user_id)->where('date', $currentDate)->first();
 
         //Retornamos la respuesta en formato JSON
         return response()->json(['attendance' => $attendance]);

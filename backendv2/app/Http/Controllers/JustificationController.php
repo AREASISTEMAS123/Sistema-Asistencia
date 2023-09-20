@@ -18,16 +18,7 @@ class JustificationController extends Controller
     }
 
     public function getJustifications(Request $request) {
-        $query = $request->input('user');
-        
-        if ($query == ''){
-            // Filtrado por default
-            $justifications = Justification::get();
-        } else {
-            // Utiliza el valor 'query' para filtrar las justificaciones
-            $justifications = Justification::where('user_id', '!=', $query)->get();
-        }
-
+        $justifications = $this->justificationService->getJustifications($request->all());
         return response()->json($justifications);
     }
 

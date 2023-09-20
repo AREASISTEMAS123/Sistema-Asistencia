@@ -60,8 +60,8 @@ class UserService
 
         $attendanceData = Attendance::where('user_id', $id)->get();
         $attendance = $attendanceData->where("attendance", "1")->count();
-        $absence = $attendanceData->where("absence", "1")->where("justification","0")->count();
-        $delay = $attendanceData->where("delay", "1")->where("justification","0")->count();
+        $absence = $attendanceData->where("attendance", "0")->where("justification","0")->where("delay", "0")->count();
+        $delay = $attendanceData->where("delay", "1")->where("justification","0")->where("attendance", "0")->count();
         $justification = $attendanceData->where("justification", "1")->count();
         $user->image_url = $user->getImageUrlAttribute();
 

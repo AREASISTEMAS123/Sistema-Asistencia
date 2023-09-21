@@ -26,7 +26,7 @@ Route::post('position/update/{id}', [App\Http\Controllers\PositionController::cl
 Route::delete('position/delete/{id}', [App\Http\Controllers\PositionController::class, 'deleteProfile']);
 
 // ---------------- JUSTIFICATIONS URL's ---------------- //
-Route::get('justification', [App\Http\Controllers\JustificationController::class, 'getJustifications']);
+Route::get('justification/list', [App\Http\Controllers\JustificationController::class, 'getJustifications']);
 Route::post('justification/create', [App\Http\Controllers\JustificationController::class, 'createJustifications']);
 
 Route::post('justification/accept/{id}', [App\Http\Controllers\JustificationController::class, 'acceptJustifications']);

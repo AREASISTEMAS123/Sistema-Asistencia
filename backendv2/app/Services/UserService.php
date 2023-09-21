@@ -41,6 +41,7 @@ class UserService
         if (!empty($filters['core'])) {
             $query->whereHas('position.core', fn ($q) => $q->where('id', $filters['core']));
         }
+        $query->orderBy('created_at', 'desc');
 
         $users = $query->paginate(10);
         foreach ($users as $user) {

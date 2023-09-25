@@ -16,9 +16,4 @@ class Department extends Model
         'created_at',
         'updated_at',
     ];
-
-    public function cores()
-    {
-        return $this->hasMany(Core::class, 'department_id', 'id');
-    }
 }

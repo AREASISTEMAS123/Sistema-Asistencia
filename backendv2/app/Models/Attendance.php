@@ -60,14 +60,14 @@ class Attendance extends Model
         }
 
         // Filtrar por núcleo
-        if (!empty($filters['core']) || !empty($userCore)) {
-            $coreId = !empty($filters['core']) ? $filters['core'] : $userCore;
-            $query->whereHas('user.position.core', fn($q) => $q->where('id', $coreId));
-        }
-
-        // Filtrar por departamento
         if (!empty($filters['department'])) {
-            $query->whereHas('user.position.core.department', fn($q) => $q->where('id', $filters['department']));
+            $departmentId = $filters['department'];
+            $query->whereHas('user.position.core.department', fn($q) => $q->where('id', $departmentId));
+        } else {
+            // Si no se selecciona un departamento, aplicar el "core" por defecto.
+            if (!empty($userCore)) {
+                $query->whereHas('user.position.core', fn($q) => $q->where('id', $userCore));
+            }
         }
 
         // Filtrar por turno

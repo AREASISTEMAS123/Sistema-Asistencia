@@ -51,5 +51,7 @@ Route::get('evaluation/list', [App\Http\Controllers\EvaluationController::class,
 Route::post('evaluation/create', [App\Http\Controllers\EvaluationController::class, 'createEvaluation']);
 Route::post('evaluation/notes/{id}', [App\Http\Controllers\EvaluationController::class, 'storeNotes']);
 
+Route::get('notifications', [App\Http\Controllers\NotificationController::class, 'getNotifications']);
+
 });
 

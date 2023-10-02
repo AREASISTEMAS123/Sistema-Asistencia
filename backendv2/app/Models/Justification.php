@@ -11,6 +11,7 @@ class Justification extends Model
 
     protected $fillable = [
         'justification_date',
+        'justification_date_end',
         'reason',
         'evidence',
         'type',
@@ -18,7 +19,7 @@ class Justification extends Model
         'user_id',
         'action_by',
     ];
-
+    
     protected $hidden = [
         'created_at',
         'updated_at',

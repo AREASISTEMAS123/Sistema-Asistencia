@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Password\ChangeController;
 
 Route::middleware(['auth:sanctum'])->group(function () {
+
 // ---------------- PASSWORD URL's ---------------- //
 Route::post('changePassword', ChangeController::class)->name('changePassword');
 
@@ -35,7 +36,7 @@ Route::post('justification/decline/{id}', [App\Http\Controllers\JustificationCon
 // ---------------- USERS URL´s ---------------------- //
 Route::get('users', [App\Http\Controllers\UserController::class, 'index']);
 Route::get('users/{id}', [App\Http\Controllers\UserController::class, 'show']);
-Route::put('users/{id}/update', [App\Http\Controllers\UserController::class, 'update']);
+Route::get('users/{id}/update', [App\Http\Controllers\UserController::class, 'update']);
 
 // ---------------- BIRTHDAYS URL's ---------------- //
 Route::get('/birthday/details', [\App\Http\Controllers\BirthdayController::class, 'detailsbirthdayMonth']);
@@ -44,14 +45,20 @@ Route::get('/birthday/nextBirthday', [\App\Http\Controllers\BirthdayController::
 // ---------------- ATTENDANCES URL's --------------- //
 Route::get('attendance', [App\Http\Controllers\AttendanceController::class, 'getAttendances']);
 //Route::post('attendance/create', [App\Http\Controllers\AttendanceController::class, 'createAttendance']);
-Route::get('attendance/id', [App\Http\Controllers\AttendanceController::class, 'show']);
+Route::post('attendance/id', [App\Http\Controllers\AttendanceController::class, 'show']);
+
+Route::get('attendance/procedure', [App\Http\Controllers\AttendanceController::class, 'callDatabaseProcedure']);
 
 // ---------------- EVALUATION URL's --------------- //
 Route::get('evaluation/list', [App\Http\Controllers\EvaluationController::class, 'getEvaluations']);
 Route::post('evaluation/create', [App\Http\Controllers\EvaluationController::class, 'createEvaluation']);
 Route::post('evaluation/notes/{id}', [App\Http\Controllers\EvaluationController::class, 'storeNotes']);
 
-Route::get('notifications', [App\Http\Controllers\NotificationController::class, 'getNotifications']);
+// ---------------- SCHEDULE URL's --------------- //
+Route::get('schedule/list', [App\Http\Controllers\ScheduleController::class, 'getSchedules']);
+Route::post('schedule/check', [App\Http\Controllers\ScheduleController::class, 'checkAttendance']);
+Route::post('schedule/create', [App\Http\Controllers\ScheduleController::class, 'createSchedule']);
 
 });
+
 
